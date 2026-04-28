@@ -1,0 +1,19 @@
+III. SCANNER Output:
+The Scanner shall provide the following outputs:
+1. Sequence of Tokens in the structure as was seen in class.
+2. The required Symbol Table for those tokens that require it.
+b) Deliverables:
+The project must include the following deliverables:
+1. The approved informal description of the lexemes required to achieve the goal.
+2. The regular expression for each kind of token.
+3. The automata that recognize the required lexemes.
+4. Tokens and their identification (Token ID).
+5. Transition Table.
+6. Symbol Tables for the required tokens.
+7. Implementation of the Scanner using UNIX-lex.
+8. Example of the Scanner Outputs.
+c) RESTRICTIONS:
+1. The scanner MUST be implemented using lex as seen in class.
+2. The scanner CAN NOT be implemented by using any kind of APIs native to the programming language used to develop the project.
+3. REGEX libraries can be used for more complex uses cases thar involves regular expressions.
+4. You CAN NOT use Python's built-in ast module

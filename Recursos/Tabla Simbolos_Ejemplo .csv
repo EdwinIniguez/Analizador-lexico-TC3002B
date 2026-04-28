@@ -1,0 +1,8 @@
+Token,Identificador,Valor,Error
+NAME,x,10,—
+NAME,y,15,—
+NAME,msg,"""hola""",—
+NAME,z,3.14,—
+NAME,2bad,—,Identificador inválido: no puede iniciar con dígito
+STRING,(literal),"""hola","Cadena no terminada: falta """
+(desconocido),@,—,Carácter inválido/no reconocido (solo si no incluyes AT en tokens)

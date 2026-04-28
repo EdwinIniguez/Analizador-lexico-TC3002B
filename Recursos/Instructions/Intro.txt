@@ -1,0 +1,22 @@
+Compiler’s Project - Lexical Analysis Phase
+I. Introduction
+The evaluation of this challenge’s phase is constituted by two parts. The first part is the evaluation of the
+functioning software, whose weight is 50% of the total evaluation. The other 50% will be formed by the
+quality correctness of the written report. The evaluation metrics for each part are shown in the following
+sections. For the evaluation of the functionality of the software, there will be an individual one-to-one
+session with each student, in which an oral exam will be applied to the student, and it will be applied as a
+multiplier of the total evaluation grade.
+
+Table #1 provides a summary of how the evaluation is formed for the project. Specific evaluation
+metrics for each part of the evaluation are provided in the following pages of this document.
+The compiler’s lexical requirements for the challenge’s goal are described on Section II. The project’s
+outcomes, i.e., the scanner outputs, the report’s deliverables, and the implementation restrictions for the
+scanner software are presented on Section III. Section IV describes the Software evaluation metrics. Section
+V describes the Oral Exam part of the evaluation as well as its components. Finally, Section VI presents the
+contents’s structure and evaluation metrics for the written report.
+
+Evaluation Weight
+Software 50%
+Written Report 50%
+Oral Exam x 100%
+Table #1: Evaluation Summary
