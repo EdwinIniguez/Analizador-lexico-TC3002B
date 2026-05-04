@@ -18,6 +18,7 @@ class TestAnalizadorLexicoRegex(unittest.TestCase):
             ("or", "OR"),
             ("not", "NOT")
         ]
+
         for entrada, token_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_kw, tipo, lexema, msg = lexer.reconocer_keyword_regex(entrada)
@@ -29,6 +30,7 @@ class TestAnalizadorLexicoRegex(unittest.TestCase):
     # Prueba que si una palabra comienza con el keyword pero continua, sea un NAME
     def test_prefijos_de_keywords_son_names(self):
         casos = ["format", "inside", "issue", "android", "oracle", "nothing"]
+        
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_kw, tipo, lexema, msg = lexer.reconocer_keyword_regex(entrada)
@@ -40,6 +42,7 @@ class TestAnalizadorLexicoRegex(unittest.TestCase):
     # Prueba identificadores validos o caracteres que no deben ser clasificados como keywords
     def test_identificadores_regulares(self):
         casos = ["variable", "x", "_contador", "v123"]
+
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_kw, tipo, lexema, msg = lexer.reconocer_keyword_regex(entrada)

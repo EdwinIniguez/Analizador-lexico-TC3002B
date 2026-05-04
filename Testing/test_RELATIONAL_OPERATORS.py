@@ -10,6 +10,7 @@ class TestRelationalOperators(unittest.TestCase):
 
     # Primer test
     # Comprueba el reconocimiento de operadores relacionales de un solo caracter
+
     def test_operadores_simples(self):
         casos = [
             ("<", "LT"),
@@ -25,6 +26,7 @@ class TestRelationalOperators(unittest.TestCase):
 
     # Segundo test
     # Comprueba el reconocimiento de operadores relacionales de dos caracteres
+
     def test_operadores_compuestos(self):
         casos = [
             ("<=", "LE"),
@@ -41,6 +43,7 @@ class TestRelationalOperators(unittest.TestCase):
 
     # Tercer test
     # Comprueba que separe adecuadamente el operador del resto de la cadena
+
     def test_operadores_con_texto_extra(self):
         casos = [
             ("<=5", "<=", "LE"),
@@ -57,6 +60,7 @@ class TestRelationalOperators(unittest.TestCase):
 
     # Cuarto test
     # Comprueba que detenga o reporte error con entradas invalidas
+    
     def test_entradas_invalidas(self):
         casos = ["", "a", "!", "1", "_"]
         for entrada in casos:

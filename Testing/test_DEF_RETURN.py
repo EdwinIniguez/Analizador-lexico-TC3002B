@@ -16,6 +16,7 @@ class TestDefReturnRegex(unittest.TestCase):
             ("def", "DEF"),
             ("return", "RETURN")
         ]
+
         for entrada, token_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_kw, tipo, lexema, msg = lexer.reconocer_keyword_regex(entrada)
@@ -27,6 +28,7 @@ class TestDefReturnRegex(unittest.TestCase):
     # Prueba que palabras que comienzan con keywords, pero continuan, sean NAME
     def test_prefijos_de_keywords_son_names(self):
         casos = ["define", "default", "returning", "returns", "def_val"]
+
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_kw, tipo, lexema, msg = lexer.reconocer_keyword_regex(entrada)
@@ -38,6 +40,7 @@ class TestDefReturnRegex(unittest.TestCase):
     # Prueba identificadores validos o caracteres que no deben ser clasificados como DEF/RETURN
     def test_identificadores_o_errores(self):
         casos = ["variable", "d", "r", "x_1", "funcion"]
+        
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_kw, tipo, lexema, msg = lexer.reconocer_keyword_regex(entrada)

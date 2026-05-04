@@ -16,6 +16,7 @@ class TestString(unittest.TestCase):
             ('"hola"', '"hola"'),
             ('"123 abC!"', '"123 abC!"')
         ]
+
         for entrada, lexema_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_valido, tipo, lexema, msg = lexer.reconocer_cadena(entrada)
@@ -30,6 +31,7 @@ class TestString(unittest.TestCase):
             ('"hola" extra', '"hola"'),
             ('""+', '""')
         ]
+
         for entrada, lexema_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_valido, tipo, lexema, msg = lexer.reconocer_cadena(entrada)
@@ -41,6 +43,7 @@ class TestString(unittest.TestCase):
     # Comprueba el rechazo de cadenas no terminadas, con saltos de linea o sin comilla de inicio
     def test_cadenas_invalidas(self):
         casos = ["", "hola", '"', '"hola', '"hola\n"']
+        
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_valido, tipo, lexema, msg = lexer.reconocer_cadena(entrada)

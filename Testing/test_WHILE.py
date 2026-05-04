@@ -20,6 +20,7 @@ class TestWhile(unittest.TestCase):
     # Comprueba que identificadores que inician con 'while' sean marcados como NAME
     def test_prefijos_identificadores(self):
         casos = ["while1", "while_loop", "whiler"]
+        
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_kw, tipo, lexema, msg = lexer.reconocer_while(entrada)
@@ -31,6 +32,7 @@ class TestWhile(unittest.TestCase):
     # Comprueba identificadores que empiezan con w pero no son while
     def test_identificadores_incompletos(self):
         casos = ["w", "wh", "whi", "whil", "wolf"]
+
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_kw, tipo, lexema, msg = lexer.reconocer_while(entrada)
@@ -42,6 +44,7 @@ class TestWhile(unittest.TestCase):
     # Comprueba entradas invalidas
     def test_entradas_invalidas(self):
         casos = ["", "1", "x", "!"]
+
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_kw, tipo, lexema, msg = lexer.reconocer_while(entrada)

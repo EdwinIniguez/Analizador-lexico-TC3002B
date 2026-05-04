@@ -72,7 +72,7 @@ class TestLexer(unittest.TestCase):
 
         # 2. Valida el mensaje de error impreso en la consola interceptada
         salida_consola = mock_stdout.getvalue()
-        self.assertIn("Caracter léxico no reconocido", salida_consola)
+        self.assertIn("Caracter lexico no reconocido", salida_consola)
         self.assertIn("$", salida_consola)
 
     # Tercer Test
@@ -84,7 +84,7 @@ class TestLexer(unittest.TestCase):
         
         self.assertIsNone(resultado)
         salida_consola = mock_stdout.getvalue()
-        self.assertIn("Error: No se encontró el archivo", salida_consola)
+        self.assertIn("Error: No se encontro el archivo", salida_consola)
 
 if __name__ == '__main__':
     unittest.main()

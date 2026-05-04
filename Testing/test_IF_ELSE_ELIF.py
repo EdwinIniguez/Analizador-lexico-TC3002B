@@ -15,6 +15,7 @@ class TestIfElseElif(unittest.TestCase):
             ("elif", "ELIF"),
             ("else", "ELSE")
         ]
+
         for entrada, token_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_kw, tipo, lexema, msg = lexer.reconocer_condicional(entrada)
@@ -26,6 +27,7 @@ class TestIfElseElif(unittest.TestCase):
     # Comprueba que identificadores que inician con 'if', 'el' o 'else' sean marcados como NAME
     def test_prefijos_identificadores(self):
         casos = ["iffy", "elephant", "elsewhere", "if1", "elif_var"]
+
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_kw, tipo, lexema, msg = lexer.reconocer_condicional(entrada)
@@ -37,6 +39,7 @@ class TestIfElseElif(unittest.TestCase):
     # Comprueba que arroje un error al pasar palabras que no empiezan como condicionales
     def test_entradas_invalidas(self):
         casos = ["", "a", "x", "xyz"]
+        
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_kw, tipo, lexema, msg = lexer.reconocer_condicional(entrada)

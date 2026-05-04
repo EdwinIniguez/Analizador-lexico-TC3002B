@@ -18,6 +18,7 @@ class TestOperadoresAsignacion(unittest.TestCase):
             ("*=", "TIMESEQ"),
             ("/=", "DIVEQ")
         ]
+
         for entrada, token_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_op, tipo, lexema, msg = lexer.reconocer_operadores_asignacion_compuesta(entrada)
@@ -28,12 +29,14 @@ class TestOperadoresAsignacion(unittest.TestCase):
     # Segundo test
     # Prueba que los operadores se separen del texto extra (ej: +=5)
     def test_operadores_con_texto_extra(self):
+        
         casos = [
             ("+=5", "+=", "PLUSEQ"),
             ("-=x", "-=", "MINUSEQ"),
             ("*= ", "*=", "TIMESEQ"),
             ("/=2", "/=", "DIVEQ")
         ]
+        
         for entrada, lexema_esperado, token_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_op, tipo, lexema, msg = lexer.reconocer_operadores_asignacion_compuesta(entrada)
@@ -45,6 +48,7 @@ class TestOperadoresAsignacion(unittest.TestCase):
     # Prueba entradas que no son operadores de asignacion compuesta    
     def test_entradas_invalidas_incompletas(self):
         casos = ["+", "-", "*", "/", "++", "--", "==5", ""]
+        
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_op, tipo, lexema, msg = lexer.reconocer_operadores_asignacion_compuesta(entrada)

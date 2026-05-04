@@ -18,6 +18,7 @@ class TestOperators(unittest.TestCase):
             ("/", "DIVIDE"),
             ("%", "MOD")
         ]
+
         for entrada, token_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_valido, tipo, lexema, msg = lexer.reconocer_operador_aritmetico(entrada)
@@ -32,6 +33,7 @@ class TestOperators(unittest.TestCase):
             ("**", "POWER"),
             ("//", "FLOORDIV")
         ]
+
         for entrada, token_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_valido, tipo, lexema, msg = lexer.reconocer_operador_aritmetico(entrada)
@@ -48,6 +50,7 @@ class TestOperators(unittest.TestCase):
             ("//x", "//", "FLOORDIV"),
             ("* ", "*", "TIMES")
         ]
+
         for entrada, lexema_esperado, token_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_valido, tipo, lexema, msg = lexer.reconocer_operador_aritmetico(entrada)
@@ -59,6 +62,7 @@ class TestOperators(unittest.TestCase):
     # Comprueba que detenga o reporte error con entradas invalidas
     def test_entradas_invalidas(self):
         casos = ["", "a", "1", "_"]
+        
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_valido, tipo, lexema, msg = lexer.reconocer_operador_aritmetico(entrada)

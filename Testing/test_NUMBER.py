@@ -12,6 +12,7 @@ class TestNumber(unittest.TestCase):
     # Prueba que los numeros sin punto se reconozcan como ENTEROS
     def test_numeros_enteros(self):
         casos = ["0", "1", "42", "9999"]
+
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_valido, tipo, subtipo, lexema, msg = lexer.reconocer_numero(entrada)
@@ -24,6 +25,7 @@ class TestNumber(unittest.TestCase):
     # Prueba que los numeros con punto se reconozcan como DECIMALES
     def test_numeros_decimales(self):
         casos = ["0.0", "3.14", "99.99"]
+
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_valido, tipo, subtipo, lexema, msg = lexer.reconocer_numero(entrada)
@@ -40,6 +42,7 @@ class TestNumber(unittest.TestCase):
             ("3.14+", "3.14", "DECIMAL"),
             ("0.5.2", "0.5", "DECIMAL")  # En este caso, se detiene al segundo punto
         ]
+        
         for entrada, lexema_esperado, subtipo_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_valido, tipo, subtipo, lexema, msg = lexer.reconocer_numero(entrada)

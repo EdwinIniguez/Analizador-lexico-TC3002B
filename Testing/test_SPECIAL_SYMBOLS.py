@@ -21,6 +21,7 @@ class TestSpecialSymbols(unittest.TestCase):
             ("`", "PIPE"),
             ("^", "CARET")
         ]
+
         for entrada, token_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_simbolo, tipo, lexema, msg = lexer.reconocer_simbolo_especial(entrada)
@@ -36,6 +37,7 @@ class TestSpecialSymbols(unittest.TestCase):
             ("<<", "LSHIFT"),
             (">>", "RSHIFT")
         ]
+
         for entrada, token_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_simbolo, tipo, lexema, msg = lexer.reconocer_simbolo_especial(entrada)
@@ -52,6 +54,7 @@ class TestSpecialSymbols(unittest.TestCase):
             (", ", ",", "COMMA"),
             (":@", ":", "COLON")
         ]
+
         for entrada, lexema_esperado, token_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_simbolo, tipo, lexema, msg = lexer.reconocer_simbolo_especial(entrada)
@@ -63,6 +66,7 @@ class TestSpecialSymbols(unittest.TestCase):
     # Prueba que detenga o reporte error con entradas invalidas
     def test_entradas_invalidas(self):
         casos = ["", "a", "-", "<", ">", "1"]
+        
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_simbolo, tipo, lexema, msg = lexer.reconocer_simbolo_especial(entrada)

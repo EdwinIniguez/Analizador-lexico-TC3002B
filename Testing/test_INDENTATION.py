@@ -16,6 +16,7 @@ class TestIndentation(unittest.TestCase):
     # Prueba que una linea vacia devuelva un NEWLINE sin alterar la pila
     def test_linea_vacia_sin_indentacion(self):
         tokens = lexer.analizar_indentacion("")
+        
         self.assertEqual(len(tokens), 1)
         self.assertEqual(tokens[0][1], "NEWLINE")
 
@@ -23,6 +24,7 @@ class TestIndentation(unittest.TestCase):
     # Prueba que agregar espacios incremente la indentacion
     def test_aumento_indentacion(self):
         tokens = lexer.analizar_indentacion("    x = 1")
+
         # Debe generar INDENT, TEXTO, y NEWLINE
         self.assertEqual(len(tokens), 3)
         self.assertEqual(tokens[0][1], "INDENT")
@@ -53,6 +55,7 @@ class TestIndentation(unittest.TestCase):
         tokens = lexer.analizar_indentacion("z = 3")
         # Debe generar dos DEDENT (del nivel 8 al 4, y del 4 al 0), TEXTO y NEWLINE
         tipos_tokens = [t[1] for t in tokens]
+
         self.assertEqual(tipos_tokens, ["DEDENT", "DEDENT", "TEXTO", "NEWLINE"])
         self.assertEqual(lexer.pila_indentacion, [0])
 

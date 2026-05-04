@@ -10,6 +10,7 @@ class TestTrueFalseNonePassBreakContinue(unittest.TestCase):
     
     # Primer Test
     # Prueba que los keywords exactos sean reconocidos como tokens validos
+
     def test_reconocimiento_keywords(self):
         casos = [
             ("VERDADERO", "VERDADERO"),
@@ -28,6 +29,7 @@ class TestTrueFalseNonePassBreakContinue(unittest.TestCase):
 
     # Segundo Test
     # Prueba que palabras que comienzan con keywords, pero continuan, sean NAME
+
     def test_prefijos_de_keywords_son_names(self):
         casos = ["VERDADEROS", "FALSO1", "None_", "password", "breakdown", "continues"]
         for entrada in casos:
@@ -39,13 +41,13 @@ class TestTrueFalseNonePassBreakContinue(unittest.TestCase):
 
     # Tercer test
     # Prueba identificadores validos o caracteres que no deben ser clasificados como DEF/RETURN
+
     def test_identificadores_regulares_y_errores(self):
         casos = ["variable", "x", "_contador", "", "!"]
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_kw, tipo, lexema, msg = lexer.reconocer_keyword_regex(entrada)
                 self.assertFalse(es_kw)
-                # Unos serán NAME y otros ERROR
                 self.assertIn(tipo, ["NAME", "ERROR"])
                 
 if __name__ == '__main__':

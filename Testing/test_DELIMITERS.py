@@ -19,6 +19,7 @@ class TestDelimiters(unittest.TestCase):
             ("{", "LBRACE"),
             ("}", "RBRACE")
         ]
+        
         for entrada, token_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_delimitador, tipo, lexema, msg = lexer.reconocer_delimitador(entrada)
@@ -34,6 +35,7 @@ class TestDelimiters(unittest.TestCase):
             ("] ", "]", "RBRACKET"),
             ("{def", "{", "LBRACE")
         ]
+
         for entrada, lexema_esperado, token_esperado in casos:
             with self.subTest(entrada=entrada):
                 es_delimitador, tipo, lexema, msg = lexer.reconocer_delimitador(entrada)
@@ -45,6 +47,7 @@ class TestDelimiters(unittest.TestCase):
     # Comprueba entradas invalidas
     def test_entradas_invalidas(self):
         casos = ["", "a", "+", "123"]
+        
         for entrada in casos:
             with self.subTest(entrada=entrada):
                 es_delimitador, tipo, lexema, msg = lexer.reconocer_delimitador(entrada)
