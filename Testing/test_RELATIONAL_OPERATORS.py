@@ -4,7 +4,7 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Source')))
 
-import RELATIONAL_OPERATORS_ as lexer  # type: ignore
+import RELATIONAL_OPERATORS as lexer  # type: ignore
 
 class TestRelationalOperators(unittest.TestCase):
 
