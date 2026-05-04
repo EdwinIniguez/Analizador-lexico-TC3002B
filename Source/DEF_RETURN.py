@@ -1,72 +1,48 @@
-# Tokens reconocidos: DEF, RETURN
-# Tipo de implementación: REGEX
-#
-# Las keywords se programan comparando la cadena de entrada letra por letra contra cada keyword esperado y si coincide y
-# no continúa con caracteres entonces se acepta. Si continúa con más caracteres entonces el token es NAME (identificador).
-#
-#   RE para DEF    →  d e f
-#   RE para RETURN →  r e t u r n
+# Tokens: DEF, RETURN
+# Implementacion: REGEX
 
+# Funciones auxiliares para caracteres
 
-# Funciones auxiliares para los caracteres individuales <-----------------------------------
-
-def es_letra(caracter):  # Comprobar si la letra es minúscula o mayúscula
+def es_letra(caracter):
     return ('a' <= caracter <= 'z') or ('A' <= caracter <= 'Z')
 
-
-def es_digito(caracter):  # Verificar si es un dígito entre 0 y 9
+def es_digito(caracter):
     return '0' <= caracter <= '9'
-
 
 def es_guion_bajo(caracter):
     return caracter == '_'
 
-
-def puede_continuar_identificador(caracter):  # Si este caracter sigue al keyword y el token pasa a ser NAME
+def puede_continuar_identificador(caracter):
     return es_letra(caracter) or es_digito(caracter) or es_guion_bajo(caracter)
 
-
-
-
-# Función auxiliar compartida que es común para todos los keywords
+# Funcion auxiliar para keywords
 
 def comparar_keyword(cadena_de_entrada, keyword_esperado, nombre_token):
 
-    # Parámetros: cadena_de_entrada (str): La cadena que se desea analizar. keyword_esperado (str): El keyword a comparar como def o return.
-    # nombre_token (str): El nombre del token (ej. "DEF", "RETURN").
-
-    # Retorna tuple: (es_keyword, tipo_token, lexema_reconocido, mensaje_resultado)
+    # Parametros: cadena, keyword y nombre del token
+    # Retorna: (es_keyword, tipo, lexema, mensaje)
 
     longitud_keyword = len(keyword_esperado)
     longitud_entrada = len(cadena_de_entrada)
 
-    lexema_reconocido = ""  # String para ir guardando el texto introducido
+    lexema_reconocido = ""
+    indice_caracter = 0
 
-    indice_caracter = 0  # Índice para ver en qué caracter estamos
+    # Leer la cadena caracter por caracter
 
+    while indice_caracter < longitud_entrada:
 
-
-    # ------------------------------------------------------->  LEER LA CADENA CARACTER POR CARACTER <--------------------------------------------------------
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
-
-    while indice_caracter < longitud_entrada:  # Bucle para recorrer el input
-
-        caracter_actual   = cadena_de_entrada[indice_caracter]  # Caracter de la entrada en posición actual
+        caracter_actual   = cadena_de_entrada[indice_caracter]
         lexema_reconocido += caracter_actual
 
-
-
-        # Verificar si aún estamos comparando contra el keyword <--------------------------------------------------------
+        # Verificar coincidencia con keyword
         if indice_caracter < longitud_keyword:
 
-            caracter_keyword = keyword_esperado[indice_caracter]  # Caracter esperado en esta posición
+            caracter_keyword = keyword_esperado[indice_caracter]
 
             if caracter_actual != caracter_keyword:
-                # El caracter no coincide con el keyword entonces puede ser NAME u otro token
+                # Si no coincide, puede ser un identificador (NAME)
                 if puede_continuar_identificador(caracter_actual):
-                    # Seguimos leyendo hasta terminar el identificador
                     indice_caracter += 1
 
                     while indice_caracter < longitud_entrada:
@@ -85,13 +61,10 @@ def comparar_keyword(cadena_de_entrada, keyword_esperado, nombre_token):
                     return (False, "ERROR", lexema_reconocido,
                             f"Error: '{lexema_reconocido}' no es un token reconocido.")
 
-
-
-        # Ya comparamos todos los caracteres del keyword <--------------------------------------------------------
+        # Keyword completa
         elif indice_caracter == longitud_keyword:
 
             if puede_continuar_identificador(caracter_actual):
-                # El keyword continúa con más letras es NAME
                 indice_caracter += 1
 
                 while indice_caracter < longitud_entrada:
@@ -107,17 +80,11 @@ def comparar_keyword(cadena_de_entrada, keyword_esperado, nombre_token):
                 return (False, "NAME", lexema_reconocido, "Identificador reconocido (no es keyword).")
 
             else:
-                break  # El keyword terminó bien
+                break
 
+        indice_caracter += 1
 
-
-        indice_caracter += 1  # Se mueve al siguiente carácter aumentando el índice
-
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
-
-    # Vemos que hayamos leído exactamente todos los caracteres del keyword
+    # Validar resultado
     if lexema_reconocido == keyword_esperado:
         return (True, nombre_token, lexema_reconocido, f"Keyword '{keyword_esperado}' reconocida.")
 

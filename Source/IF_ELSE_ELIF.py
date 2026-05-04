@@ -1,13 +1,7 @@
-# Tokens reconocidos: IF, ELIF, ELSE
-# If, Else, elif van juntos en un solo autómata
-#
-# 
-# Reconoce las palabras reservadas "if", "elif" y "else".
-# Si la palabra continúa con letras o dígitos después del keyword es un identificador (NAME) y no una keyword.
-# "if" → IF , "iffy" → NAME o "else" → ELSE
+# Tokens: IF, ELIF, ELSE
+# Implementacion: AUTOMATA
 
-
-# Definición de los estados del autómata
+# Estados del automata
 ESTADO_INICIAL    = "q0"
 ESTADO_VISTO_I    = "q1"    # Leer 'i'
 ESTADO_VISTO_IF   = "q2"    # Leer 'if' es una posible keyword IF
@@ -16,72 +10,48 @@ ESTADO_VISTO_EL   = "q4"    # Leer 'el'
 ESTADO_VISTO_ELI  = "q5"    # Leer 'eli'
 ESTADO_VISTO_ELIF = "q6"    # Leer 'elif' es una posible keyword ELIF
 ESTADO_VISTO_ELS  = "q7"    # Leer 'els'
-ESTADO_VISTO_ELSE = "q8"    # Leer 'else' es una posible keyword ELSE
-ESTADO_NOMBRE     = "qn"    # El input es un identificador (NAME) y no un keyword
+ESTADO_VISTO_ELSE = "q8"    # Leer 'else'
+ESTADO_NOMBRE     = "qn"    # Identificador (NAME)
 
+# Funciones auxiliares para caracteres
 
-# Funciones auxiliares para los caracteres individuales <-----------------------------------
-
-def es_letra(caracter):  # Comprobar si la letra es minúscula o mayúscula
+def es_letra(caracter):
     return ('a' <= caracter <= 'z') or ('A' <= caracter <= 'Z')
 
-
-def es_digito(caracter):  # Verificar si es un dígito entre 0 y 9
+def es_digito(caracter):
     return '0' <= caracter <= '9'
-
 
 def es_guion_bajo(caracter):
     return caracter == '_'
 
-
-def puede_continuar_identificador(caracter):  # Si este caracter sigue al keyword entonces el token pasa a ser NAME
+def puede_continuar_identificador(caracter):
     return es_letra(caracter) or es_digito(caracter) or es_guion_bajo(caracter)
-
-
-
-
-# Función auxiliar para manejar los estados de posible keyword <-----------------------------------
+# Transicion desde keyword
 
 def transicion_desde_posible_keyword(caracter_actual, lexema_reconocido):
-    # Cuando estamos en q2, q6 o q8 (los estados de keywords completas) y llega otro caracter vemos si sigue siendo keyword o pasa a NAME
     if puede_continuar_identificador(caracter_actual):
-        return (ESTADO_NOMBRE, lexema_reconocido + caracter_actual)  # Pasa a ser identificador
+        return (ESTADO_NOMBRE, lexema_reconocido + caracter_actual)
     else:
-        return (None, lexema_reconocido)  # None marca que el keyword fue reconocido en la tupla
+        return (None, lexema_reconocido)
 
-
-
-
-# ---------------------------------- Función principal para ejecutar el autómata sobre la entrada ----------------------------------
+# Funcion principal del automata
 
 def reconocer_condicional(cadena_de_entrada):
 
-    # Retorna tuple: (es_keyword, tipo_token, lexema_reconocido, mensaje_resultado)
-
-    if len(cadena_de_entrada) == 0:  # Descartar entradas vacías para iniciar
+    if len(cadena_de_entrada) == 0:
         return (False, "ERROR", "", "Error: la cadena de entrada está vacía.")
 
-    # Comenzar en estado inicial
     estado_actual = ESTADO_INICIAL
+    lexema_reconocido = ""
+    indice_caracter = 0
 
-    lexema_reconocido = ""  # String para ir guardando el texto introducido
+    # Leer la cadena caracter por caracter
 
-    indice_caracter = 0  # Índice para ver en qué caracter estamos
+    while indice_caracter < len(cadena_de_entrada):
 
+        caracter_actual = cadena_de_entrada[indice_caracter]
 
-
-    # ------------------------------------------------------->  LEER LA CADENA CARACTER POR CARACTER <--------------------------------------------------------
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
-
-    while indice_caracter < len(cadena_de_entrada):  # Bucle para recorrer el input
-
-        caracter_actual = cadena_de_entrada[indice_caracter]  # Comenzamos por el caracter en la posición actual
-
-
-
-        # Loop desde el ESTADO INICIAL (q0) <--------------------------------------------------------
+        # Estado q0
         if estado_actual == ESTADO_INICIAL:
 
             if caracter_actual == 'i':
@@ -93,16 +63,14 @@ def reconocer_condicional(cadena_de_entrada):
                 lexema_reconocido += caracter_actual
 
             elif puede_continuar_identificador(caracter_actual):
-                estado_actual     = ESTADO_NOMBRE  # Inicia con otra letra: es identificador
+                estado_actual     = ESTADO_NOMBRE
                 lexema_reconocido += caracter_actual
 
             else:
                 return (False, "ERROR", caracter_actual,
                         f"Error: '{caracter_actual}' no es un carácter de inicio válido.")
 
-
-
-        # Loop desde ESTADO_VISTO_I (q1): leímos 'i' <--------------------------------------------------------
+        # Estado q1
         elif estado_actual == ESTADO_VISTO_I:
 
             if caracter_actual == 'f':
@@ -114,23 +82,19 @@ def reconocer_condicional(cadena_de_entrada):
                 lexema_reconocido += caracter_actual
 
             else:
-                break  # 'i' sola es NAME
+                break
 
-
-
-        # Loop desde ESTADO_VISTO_IF (q2): leímos 'if' <--------------------------------------------------------
+        # Estado q2
         elif estado_actual == ESTADO_VISTO_IF:
 
             nuevo_estado, lexema_reconocido = transicion_desde_posible_keyword(caracter_actual, lexema_reconocido)
 
             if nuevo_estado is None:
-                break  # Aceptamos IF como keyword
+                break
             else:
                 estado_actual = nuevo_estado
 
-
-
-        # Loop desde ESTADO_VISTO_E (q3): leímos 'e' <--------------------------------------------------------
+        # Estado q3
         elif estado_actual == ESTADO_VISTO_E:
 
             if caracter_actual == 'l':
@@ -142,11 +106,9 @@ def reconocer_condicional(cadena_de_entrada):
                 lexema_reconocido += caracter_actual
 
             else:
-                break  # 'e' sola: es NAME
+                break
 
-
-
-        # Loop desde ESTADO_VISTO_EL (q4): leímos 'el' <--------------------------------------------------------
+        # Estado q4
         elif estado_actual == ESTADO_VISTO_EL:
 
             if caracter_actual == 'i':
@@ -162,11 +124,9 @@ def reconocer_condicional(cadena_de_entrada):
                 lexema_reconocido += caracter_actual
 
             else:
-                break  # 'el' sola es NAME
+                break
 
-
-
-        # Loop desde ESTADO_VISTO_ELI (q5): leímos 'eli' <--------------------------------------------------------
+        # Estado q5
         elif estado_actual == ESTADO_VISTO_ELI:
 
             if caracter_actual == 'f':
@@ -178,23 +138,19 @@ def reconocer_condicional(cadena_de_entrada):
                 lexema_reconocido += caracter_actual
 
             else:
-                break  # 'eli' sola es NAME
+                break
 
-
-
-        # Loop desde ESTADO_VISTO_ELIF (q6): leímos 'elif' <--------------------------------------------------------
+        # Estado q6
         elif estado_actual == ESTADO_VISTO_ELIF:
 
             nuevo_estado, lexema_reconocido = transicion_desde_posible_keyword(caracter_actual, lexema_reconocido)
 
             if nuevo_estado is None:
-                break  # Aceptamos ELIF como keyword
+                break
             else:
                 estado_actual = nuevo_estado
 
-
-
-        # Loop desde ESTADO_VISTO_ELS (q7): leímos 'els' <--------------------------------------------------------
+        # Estado q7
         elif estado_actual == ESTADO_VISTO_ELS:
 
             if caracter_actual == 'e':
@@ -206,40 +162,29 @@ def reconocer_condicional(cadena_de_entrada):
                 lexema_reconocido += caracter_actual
 
             else:
-                break  # 'els' sola es NAME
+                break
 
-
-
-        # Loop desde ESTADO_VISTO_ELSE (q8): leímos 'else' <--------------------------------------------------------
+        # Estado q8
         elif estado_actual == ESTADO_VISTO_ELSE:
 
             nuevo_estado, lexema_reconocido = transicion_desde_posible_keyword(caracter_actual, lexema_reconocido)
 
             if nuevo_estado is None:
-                break  # Aceptamos ELSE como keyword
+                break
             else:
                 estado_actual = nuevo_estado
 
-
-
-        # Loop en ESTADO_NOMBRE (qn): seguimos leyendo el identificador <--------------------------------------------------------
+        # Estado qn (identificador)
         elif estado_actual == ESTADO_NOMBRE:
 
             if puede_continuar_identificador(caracter_actual):
                 lexema_reconocido += caracter_actual
             else:
-                break  # El identificador terminó
+                break
 
+        indice_caracter += 1
 
-
-        indice_caracter += 1  # Se mueve al siguiente carácter aumentando el índice
-
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
-
-
-    # Regresar el estado final del autómata # <--------------------------------------------------------
+    # Resultados finales
 
     if estado_actual == ESTADO_VISTO_IF:
         return (True,  "IF",   lexema_reconocido, "Keyword 'if' reconocida.")

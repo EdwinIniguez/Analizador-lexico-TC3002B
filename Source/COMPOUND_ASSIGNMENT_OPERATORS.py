@@ -1,65 +1,41 @@
-# Tokens reconocidos: PLUSEQ (+=), MINUSEQ (-=), TIMESEQ (*=), DIVEQ (/=)
-# Tipo de implementación: REGEX
-#
-# Las expresiones regulares para estos operadores se programan comparando la cadena de entrada caracter por caracter.
-#
-#   RE para PLUSEQ  →  +=
-#   RE para MINUSEQ →  -=
-#   RE para TIMESEQ →  *=
-#   RE para DIVEQ   →  /=
+# Tokens: PLUSEQ (+=), MINUSEQ (-=), TIMESEQ (*=), DIVEQ (/=)
+# Implementacion: REGEX
 
-
-# Función auxiliar compartida que es común para todos los operadores de asignación
+# Funcion auxiliar para operadores de asignacion
 
 def comparar_operador(cadena_de_entrada, operador_esperado, nombre_token):
 
-    # Parámetros: cadena_de_entrada (str): La cadena que se desea analizar. operador_esperado (str): El operador a comparar.
-    # nombre_token (str): El nombre del token (ej. "PLUSEQ", "MINUSEQ").
-
-    # Retorna tuple: (es_operador, tipo_token, lexema_reconocido, mensaje_resultado)
+    # Parametros: cadena, operador esperado y nombre del token
+    # Retorna: (es_valido, tipo_token, lexema, mensaje)
 
     longitud_operador = len(operador_esperado)
     longitud_entrada  = len(cadena_de_entrada)
 
-    lexema_reconocido = ""  # String para ir guardando el texto introducido
+    lexema_reconocido = ""
+    indice_caracter = 0
 
-    indice_caracter = 0  # Índice para ver en qué caracter estamos
-
-
-
-    # ------------------------------------------------------->  LEER LA CADENA CARACTER POR CARACTER <--------------------------------------------------------
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
+    # Leer la cadena caracter por caracter
 
     while indice_caracter < longitud_entrada:
 
         caracter_actual   = cadena_de_entrada[indice_caracter]
         lexema_reconocido += caracter_actual
 
-
-        # Verificar si aún estamos comparando contra el operador <--------------------------------------------------------
+        # Verificar coincidencia con el operador
         if indice_caracter < longitud_operador:
 
-            caracter_operador = operador_esperado[indice_caracter]  # Caracter esperado en esta posición
+            caracter_operador = operador_esperado[indice_caracter]
 
             if caracter_actual != caracter_operador:
                 return (False, "ERROR", lexema_reconocido, f"Error: '{lexema_reconocido}' no coincide con el operador esperado.")
                 
-
-        # Ya terminamos de comparar los caracteres del operador <--------------------------------------------------------
+        # Operador terminado
         elif indice_caracter == longitud_operador:
-            # Si hay más caracteres después del operador (ej: "+=5"), el lexema solo abarca el operador.
-            # Removemos el caracter extra que se concatenó en este ciclo.
+            # Evitar consumir caracteres extra
             lexema_reconocido = lexema_reconocido[:-1]
             break
 
-
-        indice_caracter += 1  # Se mueve al siguiente carácter aumentando el índice
-
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
+        indice_caracter += 1
 
     if lexema_reconocido == operador_esperado:
         return (True, nombre_token, lexema_reconocido, f"Operador '{operador_esperado}' reconocido.")

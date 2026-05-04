@@ -1,108 +1,67 @@
-# Token reconocido  : STRING
-#  Una cadena válida inicia con comilla doble ("), contiene cualquier
-#  carácter excepto comilla o salto de línea, y cierra con comilla doble.
-#  Una cadena que no cierra antes del salto de línea es error.
+# Token: STRING
+# Implementacion: AUTOMATA
 
-
-
-# Definición de los estados del autómata
+# Estados del automata
 ESTADO_INICIAL       = "q0"
-ESTADO_LEYENDO       = "q1"   # Dentro de la cadena leyendo su contenido
-ESTADO_CADENA_CIERRA = "q2"   # Estado de aceptación (comilla de cierre vista)
+ESTADO_LEYENDO       = "q1"
+ESTADO_CADENA_CIERRA = "q2"
 ESTADO_ERROR         = "qe"
 
-
-
-# Constantes para los caracteres especiales <-----------------------------------
+# Constantes de caracteres
 
 COMILLA_DOBLE  = '"'
 SALTO_DE_LINEA = '\n'
-
-
-
-
-# ---------------------------------- Función principal para ejecutar el autómata sobre la entrada ----------------------------------
+# Funcion principal del automata
 
 def reconocer_cadena(cadena_de_entrada):
 
-    # Retorna tuple: (es_valido, tipo_token, lexema_reconocido, mensaje_resultado)
-
-    if len(cadena_de_entrada) == 0:  # Descartar entradas vacías para iniciar
+    if len(cadena_de_entrada) == 0:
         return (False, "ERROR", "", "Error: la cadena de entrada está vacía.")
 
-    # Comenzar en estado inicial
     estado_actual = ESTADO_INICIAL
+    lexema_reconocido = ""
+    indice_caracter = 0
 
-    lexema_reconocido = ""  # String para ir guardando el texto introducido incluyendo las comillas
+    # Leer la cadena caracter por caracter
 
-    indice_caracter = 0  # Índice para ver en qué caracter estamos
+    while indice_caracter < len(cadena_de_entrada):
 
+        caracter_actual = cadena_de_entrada[indice_caracter]
 
-
-    # ------------------------------------------------------->  LEER LA CADENA CARACTER POR CARACTER <--------------------------------------------------------
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
-
-    while indice_caracter < len(cadena_de_entrada):  # Bucle para recorrer el input
-
-        caracter_actual = cadena_de_entrada[indice_caracter]  # Comenzamos por el caracter en la posición actual
-
-
-
-        # Loop desde el ESTADO INICIAL (q0) <--------------------------------------------------------
+        # Estado q0
         if estado_actual == ESTADO_INICIAL:
 
             if caracter_actual == COMILLA_DOBLE:
-                # q0 --[comilla doble]--> q1  inicia la cadena
                 estado_actual     = ESTADO_LEYENDO
                 lexema_reconocido += caracter_actual
-
-            else:  # Una cadena siempre debe iniciar con comilla
+            else:
                 estado_actual     = ESTADO_ERROR
                 lexema_reconocido += caracter_actual
 
-
-
-        # Loop desde el ESTADO LEYENDO (q1) <--------------------------------------------------------
+        # Estado q1
         elif estado_actual == ESTADO_LEYENDO:
 
             if caracter_actual == COMILLA_DOBLE:
-                # q1 --[comilla doble]--> q2  la cadena se cierra bien
                 estado_actual     = ESTADO_CADENA_CIERRA
                 lexema_reconocido += caracter_actual
-                indice_caracter   += 1  # Avanzamos manualmente porque el token está completo
+                indice_caracter   += 1
                 break
-
             elif caracter_actual == SALTO_DE_LINEA:
-                # q1 --[salto de línea]--> qe  la cadena no puede tener saltos internos
                 estado_actual = ESTADO_ERROR
                 break
-
             else:
-                # q1 --[caracter válido]--> q1  seguimos leyendo la cadena
                 lexema_reconocido += caracter_actual
 
-
-
-        # Loop cuando está en ESTADO DE ERROR (qe) <--------------------------------------------------------
+        # Estado error qe
         elif estado_actual == ESTADO_ERROR:
             break
 
+        indice_caracter += 1
 
-
-        indice_caracter += 1  # Se mueve al siguiente carácter aumentando el índice
-
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
-
-    if estado_actual == ESTADO_LEYENDO:  # Si terminamos sin cerrar la cadena es error
+    if estado_actual == ESTADO_LEYENDO:
         estado_actual = ESTADO_ERROR
 
-
-
-    # Regresar el estado final del autómata # <--------------------------------------------------------
+    # Resultados finales
 
     if estado_actual == ESTADO_CADENA_CIERRA:
         return (

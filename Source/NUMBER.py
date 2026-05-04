@@ -1,135 +1,86 @@
-# Token reconocido  : NUMBER (entero o decimal)
-# Un número puede ser entero (42) o decimal (3.14)
-# No se acepta un punto sin dígitos después (3. es error).
+# Token: NUMBER (entero o decimal)
+# Implementacion: AUTOMATA
 
-
-
-# Definición de los estados del autómata
+# Estados del automata
 ESTADO_INICIAL    = "q0"
-ESTADO_ENTERO     = "q1"   # Estado de aceptación para número entero
-ESTADO_TRAS_PUNTO = "q2"   # Vimos un punto, esperamos dígito
-ESTADO_DECIMAL    = "q3"   # Estado de aceptación para número decimal
+ESTADO_ENTERO     = "q1"
+ESTADO_TRAS_PUNTO = "q2"
+ESTADO_DECIMAL    = "q3"
 ESTADO_ERROR      = "qe"
 
+# Funciones auxiliares para caracteres
 
-
-# Funciones auxiliares para los caracteres individuales <-----------------------------------
-
-def es_digito(caracter):  # Verificar si es un dígito entre 0 y 9
+def es_digito(caracter):
     return '0' <= caracter <= '9'
 
-
-def es_punto_decimal(caracter):  # Verificar si es el separador decimal
+def es_punto_decimal(caracter):
     return caracter == '.'
-
-
-
-
-# ---------------------------------- Función principal para ejecutar el autómata sobre la entrada ----------------------------------
+# Funcion principal del automata
 
 def reconocer_numero(cadena_de_entrada):
-    
-    # Retorna tuple: (es_valido, tipo_token, lexema_reconocido, mensaje_resultado)
 
-    if len(cadena_de_entrada) == 0:  # Descartar entradas vacías para iniciar
+    if len(cadena_de_entrada) == 0:
         return (False, "ERROR", "", "", "Error: la cadena de entrada está vacía.")
 
-    # Comenzar en estado inicial
     estado_actual = ESTADO_INICIAL
+    lexema_reconocido = ""
+    indice_caracter = 0
 
-    lexema_reconocido = ""  # String para ir guardando el texto introducido
+    # Leer la cadena caracter por caracter
 
-    indice_caracter = 0  # Índice para ver en qué caracter estamos
+    while indice_caracter < len(cadena_de_entrada):
 
+        caracter_actual = cadena_de_entrada[indice_caracter]
 
-
-    # ------------------------------------------------------->  LEER LA CADENA CARACTER POR CARACTER <--------------------------------------------------------
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
-
-    while indice_caracter < len(cadena_de_entrada):  # Bucle para recorrer el input
-
-        caracter_actual = cadena_de_entrada[indice_caracter]  # Comenzamos por el caracter en la posición actual
-
-
-
-        # Loop desde el ESTADO INICIAL (q0) <--------------------------------------------------------
+        # Estado q0
         if estado_actual == ESTADO_INICIAL:
 
             if es_digito(caracter_actual):
-                # q0 --[dígito]--> q1  leer la parte entera
                 estado_actual     = ESTADO_ENTERO
                 lexema_reconocido += caracter_actual
-
-            else:  # No puede iniciar un número con punto ni otro caracter
+            else:
                 estado_actual     = ESTADO_ERROR
                 lexema_reconocido += caracter_actual
 
-
-
-        # Loop desde el ESTADO ENTERO (q1) <--------------------------------------------------------
+        # Estado q1
         elif estado_actual == ESTADO_ENTERO:
 
             if es_digito(caracter_actual):
-                # q1 --[dígito]--> q1  continúa el número entero
                 lexema_reconocido += caracter_actual
-
             elif es_punto_decimal(caracter_actual):
-                # q1 --[punto]--> q2 
                 estado_actual     = ESTADO_TRAS_PUNTO
                 lexema_reconocido += caracter_actual
-
-            else:  # El caracter no forma parte del número
+            else:
                 break
 
-
-
-        # Loop desde el ESTADO TRAS PUNTO (q2) <--------------------------------------------------------
+        # Estado q2
         elif estado_actual == ESTADO_TRAS_PUNTO:
 
             if es_digito(caracter_actual):
-                # q2 --[dígito]--> q3  parte de fracción después del punto
                 estado_actual     = ESTADO_DECIMAL
                 lexema_reconocido += caracter_actual
-
-            else:  # El punto no fue seguido de dígito y es error
+            else:
                 estado_actual = ESTADO_ERROR
                 break
 
-
-
-        # Loop desde el ESTADO DECIMAL (q3) <--------------------------------------------------------
+        # Estado q3
         elif estado_actual == ESTADO_DECIMAL:
 
             if es_digito(caracter_actual):
-                # q3 --[dígito]--> q3  continúa la parte decimal
                 lexema_reconocido += caracter_actual
-
             elif es_punto_decimal(caracter_actual):
-                # q3 --[segundo punto]--> qe  doble punto no es válido
                 estado_actual = ESTADO_ERROR
                 break
-
-            else:  # El caracter no forma parte del decimal
+            else:
                 break
 
-
-
-        # Loop cuando está en ESTADO DE ERROR (qe) <--------------------------------------------------------
+        # Estado error qe
         elif estado_actual == ESTADO_ERROR:
             break
 
+        indice_caracter += 1
 
-
-        indice_caracter += 1  # Se mueve al siguiente carácter aumentando el índice
-
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
-
-
-    # Regresar el estado final del autómata # <--------------------------------------------------------
+    # Resultados finales
 
     if estado_actual == ESTADO_ENTERO:
         return (
