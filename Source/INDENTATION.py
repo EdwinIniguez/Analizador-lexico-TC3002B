@@ -1,40 +1,21 @@
-# Tokens reconocidos: NEWLINE, INDENT, DEDENT
-# Tipo de implementación: AUTÓMATA CON PILA (Stack-based Automaton)
-#
-# A diferencia de los otros tokens, la indentación en lenguajes como Python no se puede
-# evaluar de forma aislada solo viendo un caracter. Se necesita una "pila" (stack) para
-# recordar el nivel de indentación actual y compararlo con el de las líneas anteriores.
-#
-#   NEWLINE → Salto de línea (\n)
-#   INDENT  → Aumento en la cantidad de espacios/tabuladores al inicio de una línea.
-#   DEDENT  → Disminución en la cantidad de espacios/tabuladores al inicio de una línea.
+# Tokens: NEWLINE, INDENT, DEDENT
+# Implementacion: AUTOMATA CON PILA
 
+pila_indentacion = [0]
 
-pila_indentacion = [0]  # Pila global para llevar el registro de los niveles de indentación
-
-
-
-
-# ---------------------------------- Función principal para ejecutar el autómata sobre la entrada ----------------------------------
+# Funcion principal para indentacion
 
 def analizar_indentacion(cadena_de_entrada):
-
-    # Parámetros: cadena_de_entrada (str): La línea de código a analizar.
-    # Retorna una lista de tuplas con el formato: (es_valido, tipo_token, lexema_reconocido, mensaje_resultado)
 
     tokens_generados = []
 
     if len(cadena_de_entrada) == 0:
-        # En una línea vacía simplemente emitimos un NEWLINE
         return [(True, "NEWLINE", "\\n", "Salto de línea (línea vacía).")]
-
 
     espacios = 0
     indice_caracter = 0
 
-
-    # -------------------------------------------------------> LEER CARACTERES DE INDENTACIÓN <--------------------------------------------------------
-    # <---------------------------------------------------------------------------------------------------------------------------->
+    # Leer espacios iniciales
     while indice_caracter < len(cadena_de_entrada):
 
         caracter_actual = cadena_de_entrada[indice_caracter]
@@ -42,39 +23,31 @@ def analizar_indentacion(cadena_de_entrada):
         if caracter_actual == ' ':
             espacios += 1
         elif caracter_actual == '\t':
-            espacios += 4  # Un tabulador comúnmente cuenta como 4 espacios
+            espacios += 4
         else:
-            break  # Terminó la indentación y comienza el texto
+            break
             
         indice_caracter += 1
-
 
     lexema_indentacion = cadena_de_entrada[:indice_caracter]
     contenido_linea    = cadena_de_entrada[indice_caracter:]
 
-
-    # -------------------------------------------------------> EVALUAR LA PILA DE INDENTACIÓN <--------------------------------------------------------
-    # <---------------------------------------------------------------------------------------------------------------------------->
+    # Evaluar niveles
     nivel_actual = pila_indentacion[-1]
 
     if espacios > nivel_actual:
-        # Aumento de indentación -> INDENT
         pila_indentacion.append(espacios)
         tokens_generados.append((True, "INDENT", lexema_indentacion, f"Aumento de indentación a {espacios} espacios."))
 
     elif espacios < nivel_actual:
-        # Reducción de indentación -> DEDENT (Puede generar múltiples DEDENTs si retrocede varios niveles)
         while len(pila_indentacion) > 1 and pila_indentacion[-1] > espacios:
             pila_indentacion.pop()
             tokens_generados.append((True, "DEDENT", "", f"Reducción de indentación al nivel de {pila_indentacion[-1]} espacios."))
         
-        # Verificar si el nuevo nivel coincide con uno de los niveles existentes en la pila
         if pila_indentacion[-1] != espacios:
             tokens_generados.append((False, "ERROR", lexema_indentacion, f"Error de Indentación: la reducción de {espacios} espacios no coincide con ningún nivel anterior."))
 
-
-    # -------------------------------------------------------> AGREGAR NEWLINE AL FINAL <--------------------------------------------------------
-    # Simulamos que al final de la instrucción leída siempre hay un salto de línea
+    # Agregar NEWLINE
     if contenido_linea:
         tokens_generados.append((True, "TEXTO", contenido_linea, "Contenido de la línea (otros tokens)."))
         tokens_generados.append((True, "NEWLINE", "\\n", "Salto de línea reconocido al final de la instrucción."))

@@ -1,110 +1,69 @@
-# Token reconocido  : NAME
-# Un identificador válido debe iniciar con una letra (a-z, A-Z) o guión
-# bajo (_), y puede continuar con letras, dígitos o guiones bajos.
+# Token: NAME
+# Implementacion: AUTOMATA
 
-
-# Definición de los estados del autómata
+# Estados del automata
 ESTADO_INICIAL = "q0"
-ESTADO_VALIDO  = "q1"   # Estado válido para nombre
+ESTADO_VALIDO  = "q1"
 ESTADO_ERROR   = "qe"
 
+# Funciones auxiliares para caracteres
 
-
-# Funciones auxiliares para los caracteres individuales <-----------------------------------
-
-def es_letra(caracter):  # Comprobar si la letra es minúscula o mayúscula
+def es_letra(caracter):
     return ('a' <= caracter <= 'z') or ('A' <= caracter <= 'Z')
 
-
-def es_digito(caracter):  # Verificar si es un dígito entre 0 y 9
+def es_digito(caracter):
     return '0' <= caracter <= '9'
-
 
 def es_guion_bajo(caracter):
     return caracter == '_'
 
-
-def puede_iniciar_identificador(caracter):  # Solo permitir letra o _ en la primer posición
+def puede_iniciar_identificador(caracter):
     return es_letra(caracter) or es_guion_bajo(caracter)
 
-
-def puede_continuar_identificador(caracter):  # Verificar si se puede usar el caracter para continuar
+def puede_continuar_identificador(caracter):
     return es_letra(caracter) or es_digito(caracter) or es_guion_bajo(caracter)
-
-
-
-
-# ---------------------------------- Función principal para ejecutar el autómata sobre la entrada ----------------------------------
+# Funcion principal del automata
 
 def reconocer_identificador(cadena_de_entrada):
-   
 
-    # Retorna tuple: (es_valido, tipo_token, lexema_reconocido, mensaje_resultado)
-    
-
-    if len(cadena_de_entrada) == 0:  # Descartar entradas vacías para iniciar
+    if len(cadena_de_entrada) == 0:
         return (False, "ERROR", "", "Error: la cadena de entrada está vacía.")
 
-    # Comenzar en estado inicial
     estado_actual = ESTADO_INICIAL
+    lexema_reconocido = ""
+    indice_caracter = 0
 
-    lexema_reconocido = ""  # String para ir guardando el texto introducido
+    # Leer la cadena caracter por caracter
 
-    indice_caracter = 0  # Índice para ver en qué caracter estamos
+    while indice_caracter < len(cadena_de_entrada):
 
+        caracter_actual = cadena_de_entrada[indice_caracter]
 
+        # Estado inicial q0
+        if estado_actual == ESTADO_INICIAL:
 
-    # ------------------------------------------------------->  LEER LA CADENA CARACTER POR CARACTER <--------------------------------------------------------
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
-
-    while indice_caracter < len(cadena_de_entrada):  # Bucle para recorrer el input
-
-        caracter_actual = cadena_de_entrada[indice_caracter]  # Comenzamos por el caracter en la posición actual
-
-
-
-        # Loop desde el ESTADO INICIAL (q0) <--------------------------------------------------------
-        if estado_actual == ESTADO_INICIAL:  # Recordar que siempre empezamos en q0 como en los diagramas de las clases
-
-            if puede_iniciar_identificador(caracter_actual):  # Uso la función de arriba para comenzar
-                # q0 -- letra o _ --> q1
+            if puede_iniciar_identificador(caracter_actual):
                 estado_actual     = ESTADO_VALIDO  # q1
                 lexema_reconocido += caracter_actual
-
-            else:  # Si el estado q0 empieza con dígito u otra cosa no cambia de estado
+            else:
                 estado_actual     = ESTADO_ERROR
                 lexema_reconocido += caracter_actual
 
-
-
-        # Loop desde el ESTADO VÁLIDO (q1) <--------------------------------------------------------
+        # Estado valido q1
         elif estado_actual == ESTADO_VALIDO:
 
-            if puede_continuar_identificador(caracter_actual):  # Función de más arriba para ver si podemos seguir llenando el string
-                # q1 --> letra, dígito o _ --> q1  se queda loopeando en q1
+            if puede_continuar_identificador(caracter_actual):
                 lexema_reconocido += caracter_actual
-
-            else:  # Se rompe si el caracter no es válido o si el caracter ya lo leímos
+            else:
                 break
 
-
-
-        # Loop cuando está en ESTADO DE ERROR (qe) <--------------------------------------------------------
+        # Estado error qe
         elif estado_actual == ESTADO_ERROR:
             break
 
+        indice_caracter += 1
 
-
-        indice_caracter += 1  # Se mueve al siguiente carácter aumentando el índice
-
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
-
-
-    # Regresar el estado final del autómata # <--------------------------------------------------------
+    # Resultados finales
 
     if estado_actual == ESTADO_VALIDO:
         return (

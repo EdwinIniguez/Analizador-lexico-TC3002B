@@ -26,35 +26,34 @@ def analizar_codigo_fuente(ruta_archivo):
 
     INDENTATION.resetear_pila()
     secuencia_tokens = []
-    tabla_simbolos = set()  # set para guardar los identificadores unicos
+    tabla_simbolos = set()  # identificadores unicos
 
     print("\n" + "="*65)
-    print(f"{'TOKEN':<20} | {'LEXEMA':<25} | {'LÍNEA'}")
+    print(f"{'TOKEN':<20} | {'LEXEMA':<25} | {'LINEA'}")
     print("="*65)
 
     for num_linea, linea in enumerate(lineas, start=1):
-        
-        #Pasar la linea completa al automata de indentacion
+        # Indentacion
         tokens_indentacion = INDENTATION.analizar_indentacion(linea)
         
         for token_tuple in tokens_indentacion:
             es_valido, tipo_token, lexema, mensaje = token_tuple
             
-            # Manejar los tokens estructurales (INDENT, DEDENT, NEWLINE)
+            # Tokens estructurales
             if tipo_token in ["INDENT", "DEDENT", "NEWLINE"]:
                 secuencia_tokens.append((tipo_token, lexema, num_linea))
-                # Limpia el salto de linea para imprimir en consola
+                # Limpia salto de linea para imprimir
                 lex_print = lexema.replace('\n', '\\n') if lexema else ''
                 print(f"{tipo_token:<20} | {lex_print:<25} | {num_linea}")
             
-            # Manejar el contenido real de la linea
+            # Contenido de la linea
             elif tipo_token == "TEXTO":
                 subcadena = lexema
                 indice = 0
                 longitud = len(subcadena)
                 
                 while indice < longitud:
-                    # Omitir espacios en blanco y tabuladores internos entre tokens
+                    # Omitir espacios
                     if subcadena[indice] in [' ', '\t', '\n', '\r']:
                         indice += 1
                         continue
@@ -93,37 +92,37 @@ def analizar_codigo_fuente(ruta_archivo):
                                     es_keyword = True
                                     break
                             
-                            # Si no fue keyword entonces asumimos que es un NAME
+                            # Si no es keyword, es NAME
                             if not es_keyword:
                                 match_encontrado = ("NAME", lex)
-                                tabla_simbolos.add(lex) # Añadir a la tabla de simbolos
+                                tabla_simbolos.add(lex)
                     
-                    # OPERADORES DE ASIGNACION COMPUESTA (+=, -=, etc.)
+                    # OPERADORES ASIGNACION COMPUESTA
                     if not match_encontrado:
                         res = COMPOUND_ASSIGNMENT_OPERATORS.reconocer_operadores_asignacion_compuesta(cadena_actual)
                         if res[0]: match_encontrado = (res[1], res[2])
                         
-                    # SIMBOLOS ESPECIALES Y DELIMITADORES COMPUESTOS (->, <<, >>, etc.)
+                    # SIMBOLOS ESPECIALES
                     if not match_encontrado:
                         res = SPECIAL_SYMBOLS.reconocer_simbolo_especial(cadena_actual)
                         if res[0]: match_encontrado = (res[1], res[2])
                         
-                    # OPERADORES RELACIONALES Y ASIGNACION NORMAL (<=, ==, <, =)
+                    # OPERADORES RELACIONALES
                     if not match_encontrado:
                         res = RELATIONAL_OPERATORS.reconocer_operadores_relacionales_regex(cadena_actual)
                         if res[0]: match_encontrado = (res[1], res[2])
                         
-                    # DELIMITADORES SIMPLES ( (, [, { )
+                    # DELIMITADORES
                     if not match_encontrado:
                         res = DELIMITERS.reconocer_delimitador(cadena_actual)
                         if res[0]: match_encontrado = (res[1], res[2])
                         
-                    # OPERADORES ARITMETICOS (+, -, *, /, //, %)
+                    # OPERADORES ARITMETICOS
                     if not match_encontrado:
                         res = OPERATORS.reconocer_operador_aritmetico(cadena_actual)
                         if res[0]: match_encontrado = (res[1], res[2])
                         
-                    # RESULTADO DE LA EVALUACIÓN
+                    # Token final
                     if match_encontrado:
                         tipo_final, lexema_final = match_encontrado
                         secuencia_tokens.append((tipo_final, lexema_final, num_linea))
@@ -137,9 +136,9 @@ def analizar_codigo_fuente(ruta_archivo):
 
     print("="*65)
     
-    # tabla de simbolos
+    # Tabla de simbolos
     print("\n" + "="*45)
-    print("    TABLA DE SÍMBOLOS (Identificadores)")
+    print("    TABLA DE SIMBOLOS (Identificadores)")
     print("="*45)
     for i, simbolo in enumerate(sorted(tabla_simbolos), start=1):
         print(f" ID: {i:03d} | NAME: {simbolo}")

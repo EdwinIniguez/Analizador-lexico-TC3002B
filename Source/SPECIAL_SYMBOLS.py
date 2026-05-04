@@ -1,72 +1,41 @@
-# Tokens reconocidos: COMMA (,), COLON (:), DOT (.), AT (@), ARROW (->), TILDE (~), AMPERSAND (&), PIPE (`), CARET (^), LSHIFT (<<), RSHIFT (>>)
-# Tipo de implementación: REGEX
-#
-# Las expresiones regulares para estos símbolos se programan comparando la cadena de entrada caracter por caracter.
-#
-#   RE para COMMA     →  ,
-#   RE para COLON     →  :
-#   RE para DOT       →  .
-#   RE para AT        →  @
-#   RE para ARROW     →  ->
-#   RE para TILDE     →  ~
-#   RE para AMPERSAND →  &
-#   RE para PIPE      →  `  (Acento grave según especificación)
-#   RE para CARET     →  ^
-#   RE para LSHIFT    →  <<
-#   RE para RSHIFT    →  >>
+# Tokens: COMMA, COLON, DOT, AT, ARROW, TILDE, AMPERSAND, PIPE, CARET, LSHIFT, RSHIFT
+# Implementacion: REGEX
 
-
-# Función auxiliar compartida que es común para todos los símbolos especiales
+# Funcion auxiliar para simbolos especiales
 
 def comparar_simbolo(cadena_de_entrada, simbolo_esperado, nombre_token):
 
-    # Parámetros: cadena_de_entrada (str): La cadena que se desea analizar. simbolo_esperado (str): El símbolo a comparar.
-    # nombre_token (str): El nombre del token (ej. "COMMA", "ARROW").
-
-    # Retorna tuple: (es_simbolo, tipo_token, lexema_reconocido, mensaje_resultado)
+    # Parametros: cadena, simbolo esperado y nombre del token
+    # Retorna: (es_valido, tipo, lexema, mensaje)
 
     longitud_simbolo = len(simbolo_esperado)
     longitud_entrada = len(cadena_de_entrada)
 
-    lexema_reconocido = ""  # String para ir guardando el texto introducido
+    lexema_reconocido = ""
+    indice_caracter = 0
 
-    indice_caracter = 0  # Índice para ver en qué caracter estamos
-
-
-
-    # ------------------------------------------------------->  LEER LA CADENA CARACTER POR CARACTER <--------------------------------------------------------
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
+    # Leer la cadena caracter por caracter
 
     while indice_caracter < longitud_entrada:
 
         caracter_actual   = cadena_de_entrada[indice_caracter]
         lexema_reconocido += caracter_actual
 
-
-        # Verificar si aún estamos comparando contra el símbolo <--------------------------------------------------------
+        # Verificar coincidencia con el simbolo
         if indice_caracter < longitud_simbolo:
 
-            caracter_simbolo = simbolo_esperado[indice_caracter]  # Caracter esperado en esta posición
+            caracter_simbolo = simbolo_esperado[indice_caracter]
 
             if caracter_actual != caracter_simbolo:
                 return (False, "ERROR", lexema_reconocido, f"Error: '{lexema_reconocido}' no coincide con el símbolo esperado.")
                 
-
-        # Ya terminamos de comparar los caracteres del símbolo <--------------------------------------------------------
+        # Simbolo terminado
         elif indice_caracter == longitud_simbolo:
-            # Si hay más caracteres después del símbolo (ej: "->x"), el lexema solo abarca el símbolo.
-            # Removemos el caracter extra que se concatenó en este ciclo.
+            # Evitar consumir caracteres extra
             lexema_reconocido = lexema_reconocido[:-1]
             break
 
-
-        indice_caracter += 1  # Se mueve al siguiente carácter aumentando el índice
-
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
+        indice_caracter += 1
 
     if lexema_reconocido == simbolo_esperado:
         return (True, nombre_token, lexema_reconocido, f"Símbolo '{simbolo_esperado}' reconocido.")

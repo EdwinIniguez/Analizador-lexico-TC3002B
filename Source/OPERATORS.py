@@ -1,85 +1,59 @@
-# Tokens reconocidos: PLUS (+), MINUS (-), TIMES (*), POWER (**), DIVIDE (/), FLOORDIV (//), MOD (%)
-# Algunos operadores son de un solo carácter +, -, % y se aceptan rápido
-# Otros necesitan ver el siguiente carácter para decidir '*'  solo es TIMES y '**' es POWER
-# '/'  solo es DIVIDE y  '//' es FLOORDIV
+# Tokens: PLUS (+), MINUS (-), TIMES (*), POWER (**), DIVIDE (/), FLOORDIV (//), MOD (%)
+# Implementacion: AUTOMATA
 
-
-# Definición de los estados del autómata
+# Estados del automata
 ESTADO_INICIAL      = "q0"
-ESTADO_VISTO_STAR   = "q1"   # Leímos '*', esperamos saber si es '*' o '**'
-ESTADO_VISTO_SLASH  = "q2"   # Leímos '/', esperamos saber si es '/' o '//'
+ESTADO_VISTO_STAR   = "q1"
+ESTADO_VISTO_SLASH  = "q2"
 
-
-
-# Constantes para los caracteres de cada operador <-----------------------------------
+# Constantes de caracteres
 
 CARACTER_SUMA       = '+'
 CARACTER_RESTA      = '-'
 CARACTER_ESTRELLA   = '*'
 CARACTER_DIAGONAL   = '/'
 CARACTER_PORCENTAJE = '%'
-
-
-
-
-# ---------------------------------- Función principal para ejecutar el autómata sobre la entrada ----------------------------------
+# Funcion principal del automata
 
 def reconocer_operador_aritmetico(cadena_de_entrada):
 
-    # Retorna tuple: (es_valido, tipo_token, lexema_reconocido, mensaje_resultado)
-
-    if len(cadena_de_entrada) == 0:  # Descartar entradas vacías para iniciar
+    if len(cadena_de_entrada) == 0:
         return (False, "ERROR", "", "Error: la cadena de entrada está vacía.")
 
-    # Comenzar en estado inicial
     estado_actual = ESTADO_INICIAL
+    lexema_reconocido = ""
+    indice_caracter = 0
 
-    lexema_reconocido = ""  # String para ir guardando el texto introducido
+    # Leer la cadena caracter por caracter
 
-    indice_caracter = 0  # Índice para ver en qué caracter estamos
+    while indice_caracter < len(cadena_de_entrada):
 
+        caracter_actual = cadena_de_entrada[indice_caracter]
 
-
-    # ------------------------------------------------------->  LEER LA CADENA CARACTER POR CARACTER <--------------------------------------------------------
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
-
-    while indice_caracter < len(cadena_de_entrada):  # Bucle para recorrer el input
-
-        caracter_actual = cadena_de_entrada[indice_caracter]  # Comenzamos por el caracter en la posición actual
-
-
-
-        # Loop desde el ESTADO INICIAL (q0) <--------------------------------------------------------
+        # Estado q0
         if estado_actual == ESTADO_INICIAL:
 
             if caracter_actual == CARACTER_SUMA:
-                # q0 --[+]--> ACEPTA PLUS de una vez porque tiene un solo caracter
                 lexema_reconocido += caracter_actual
                 return (True, "PLUS", lexema_reconocido, "Operador suma reconocido.")
 
             elif caracter_actual == CARACTER_RESTA:
-                # q0 --[-]--> ACEPTA MINUS de una vez porque tiene un solo caracter
                 lexema_reconocido += caracter_actual
                 return (True, "MINUS", lexema_reconocido, "Operador resta reconocido.")
 
             elif caracter_actual == CARACTER_PORCENTAJE:
-                # q0 --[%]--> ACEPTA MOD de una vez porque tiene un solo caracter
                 lexema_reconocido += caracter_actual
                 return (True, "MOD", lexema_reconocido, "Operador módulo reconocido.")
 
             elif caracter_actual == CARACTER_ESTRELLA:
-                # q0 --[*]--> q1  hay que verificar si viene otro igual
                 estado_actual     = ESTADO_VISTO_STAR
                 lexema_reconocido += caracter_actual
 
             elif caracter_actual == CARACTER_DIAGONAL:
-                # q0 --[/]--> q2  hay que verificar si viene otra '/'
                 estado_actual     = ESTADO_VISTO_SLASH
                 lexema_reconocido += caracter_actual
 
-            else:  # El caracter no es ningún operador 
+            else:
                 return (
                     False,
                     "ERROR",
@@ -87,48 +61,29 @@ def reconocer_operador_aritmetico(cadena_de_entrada):
                     f"Error léxico: '{caracter_actual}' no es un operador aritmético válido."
                 )
 
-
-
-        # Loop desde ESTADO_VISTO_STAR (q1): ya leímos un '*' <--------------------------------------------------------
-        # Ahora vemos si es TIMES (*) o POWER (**)
+        # Estado q1 (*)
         elif estado_actual == ESTADO_VISTO_STAR:
 
             if caracter_actual == CARACTER_ESTRELLA:
-                # q1 --[*]--> acepta POWER  (**)
                 lexema_reconocido += caracter_actual
                 return (True, "POWER", lexema_reconocido, "Operador potencia reconocido.")
-
             else:
-                # El siguiente caracter no es '*' entonces aceptamos TIMES (*)
-                # Ese caracter pertenece al siguiente token, no lo consumimos
+                # Es TIMES, no consumir el caracter actual
                 return (True, "TIMES", lexema_reconocido, "Operador multiplicación reconocido.")
 
-
-
-        # Loop desde ESTADO_VISTO_SLASH (q2): ya leímos un '/' <--------------------------------------------------------
-        # Ahora vemos si es DIVIDE / o FLOORDIV //
+        # Estado q2 (/)
         elif estado_actual == ESTADO_VISTO_SLASH:
 
             if caracter_actual == CARACTER_DIAGONAL:
-                # q2 --[/]--> acepta FLOORDIV  (//)
                 lexema_reconocido += caracter_actual
                 return (True, "FLOORDIV", lexema_reconocido, "Operador división entera reconocido.")
-
             else:
-                # El siguiente caracter no es '/' entonces aceptamos DIVIDE (/)
-                # Ese caracter pertenece al siguiente token, no lo consumimos
+                # Es DIVIDE, no consumir el caracter actual
                 return (True, "DIVIDE", lexema_reconocido, "Operador división reconocido.")
 
+        indice_caracter += 1
 
-
-        indice_caracter += 1  # Se mueve al siguiente carácter aumentando el índice
-
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
-
-
-    # Regresar el estado final del autómata cuando terminó la cadena sin más caracteres # <--------------------------------------------------------
+    # Resultados finales
 
     if estado_actual == ESTADO_VISTO_STAR:
         return (True, "TIMES", lexema_reconocido, "Operador multiplicación reconocido.")

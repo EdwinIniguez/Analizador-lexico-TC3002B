@@ -1,67 +1,41 @@
-# Tokens reconocidos: LPAREN ((), RPAREN ()), LBRACKET ([), RBRACKET (]), LBRACE ({), RBRACE (})
-# Tipo de implementación: REGEX
-#
-# Las expresiones regulares para estos delimitadores se programan comparando la cadena de entrada caracter por caracter.
-#
-#   RE para LPAREN   →  (
-#   RE para RPAREN   →  )
-#   RE para LBRACKET →  [
-#   RE para RBRACKET →  ]
-#   RE para LBRACE   →  {
-#   RE para RBRACE   →  }
+# Tokens: LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE
+# Implementacion: REGEX
 
-
-# Función auxiliar compartida que es común para todos los delimitadores
+# Funcion auxiliar para delimitadores
 
 def comparar_delimitador(cadena_de_entrada, delimitador_esperado, nombre_token):
 
-    # Parámetros: cadena_de_entrada (str): La cadena que se desea analizar. delimitador_esperado (str): El delimitador a comparar.
-    # nombre_token (str): El nombre del token (ej. "LPAREN", "RBRACKET").
-
-    # Retorna tuple: (es_delimitador, tipo_token, lexema_reconocido, mensaje_resultado)
+    # Parametros: cadena, delimitador esperado y nombre del token
+    # Retorna: (es_valido, tipo, lexema, mensaje)
 
     longitud_delimitador = len(delimitador_esperado)
     longitud_entrada     = len(cadena_de_entrada)
 
-    lexema_reconocido = ""  # String para ir guardando el texto introducido
+    lexema_reconocido = ""
+    indice_caracter = 0
 
-    indice_caracter = 0  # Índice para ver en qué caracter estamos
-
-
-
-    # ------------------------------------------------------->  LEER LA CADENA CARACTER POR CARACTER <--------------------------------------------------------
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
+    # Leer la cadena caracter por caracter
 
     while indice_caracter < longitud_entrada:
 
         caracter_actual   = cadena_de_entrada[indice_caracter]
         lexema_reconocido += caracter_actual
 
-
-        # Verificar si aún estamos comparando contra el delimitador <--------------------------------------------------------
+        # Verificar coincidencia con el delimitador
         if indice_caracter < longitud_delimitador:
 
-            caracter_delimitador = delimitador_esperado[indice_caracter]  # Caracter esperado en esta posición
+            caracter_delimitador = delimitador_esperado[indice_caracter]
 
             if caracter_actual != caracter_delimitador:
                 return (False, "ERROR", lexema_reconocido, f"Error: '{lexema_reconocido}' no coincide con el delimitador esperado.")
                 
-
-        # Ya terminamos de comparar los caracteres del delimitador <--------------------------------------------------------
+        # Delimitador terminado
         elif indice_caracter == longitud_delimitador:
-            # Si hay más caracteres después del delimitador (ej: "(x"), el lexema solo abarca el delimitador.
-            # Removemos el caracter extra que se concatenó en este ciclo.
+            # Evitar consumir caracteres extra
             lexema_reconocido = lexema_reconocido[:-1]
             break
 
-
-        indice_caracter += 1  # Se mueve al siguiente carácter aumentando el índice
-
-    # <---------------------------------------------------------------------------------------------------------------------------->
-    # <---------------------------------------------------------------------------------------------------------------------------->
-
+        indice_caracter += 1
 
     if lexema_reconocido == delimitador_esperado:
         return (True, nombre_token, lexema_reconocido, f"Delimitador '{delimitador_esperado}' reconocido.")
