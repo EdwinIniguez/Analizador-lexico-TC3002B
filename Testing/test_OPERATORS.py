@@ -8,8 +8,9 @@ import OPERATORS as lexer  # type: ignore
 
 class TestOperators(unittest.TestCase):
 
+    # Primer test
+    #  Comprueba el reconocimiento de operadores de un solo caracter
     def test_operadores_simples(self):
-        """Comprueba el reconocimiento de operadores de un solo caracter."""
         casos = [
             ("+", "PLUS"),
             ("-", "MINUS"),
@@ -24,8 +25,9 @@ class TestOperators(unittest.TestCase):
                 self.assertEqual(tipo, token_esperado)
                 self.assertEqual(lexema, entrada)
 
+    # Segundo test
+    # Comprueba el reconocimiento de operadores de dos caracteres
     def test_operadores_compuestos(self):
-        """Comprueba el reconocimiento de operadores de dos caracteres."""
         casos = [
             ("**", "POWER"),
             ("//", "FLOORDIV")
@@ -37,8 +39,9 @@ class TestOperators(unittest.TestCase):
                 self.assertEqual(tipo, token_esperado)
                 self.assertEqual(lexema, entrada)
 
+    # Tercer test
+    # Comprueba que separe adecuadamente el operador del resto de la cadena
     def test_operadores_con_texto(self):
-        """Comprueba que separe adecuadamente el operador del resto de la cadena."""
         casos = [
             ("+5", "+", "PLUS"),
             ("**2", "**", "POWER"),
@@ -52,8 +55,9 @@ class TestOperators(unittest.TestCase):
                 self.assertEqual(tipo, token_esperado)
                 self.assertEqual(lexema, lexema_esperado)
 
+    # Cuarto test
+    # Comprueba que detenga o reporte error con entradas invalidas
     def test_entradas_invalidas(self):
-        """Comprueba que detenga o reporte error con entradas inválidas."""
         casos = ["", "a", "1", "_"]
         for entrada in casos:
             with self.subTest(entrada=entrada):

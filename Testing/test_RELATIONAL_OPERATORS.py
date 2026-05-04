@@ -8,8 +8,9 @@ import RELATIONAL_OPERATORS as lexer  # type: ignore
 
 class TestRelationalOperators(unittest.TestCase):
 
+    # Primer test
+    # Comprueba el reconocimiento de operadores relacionales de un solo caracter
     def test_operadores_simples(self):
-        """Comprueba el reconocimiento de operadores relacionales de un solo caracter."""
         casos = [
             ("<", "LT"),
             (">", "GT"),
@@ -22,8 +23,9 @@ class TestRelationalOperators(unittest.TestCase):
                 self.assertEqual(tipo, token_esperado)
                 self.assertEqual(lexema, entrada)
 
+    # Segundo test
+    # Comprueba el reconocimiento de operadores relacionales de dos caracteres
     def test_operadores_compuestos(self):
-        """Comprueba el reconocimiento de operadores relacionales de dos caracteres."""
         casos = [
             ("<=", "LE"),
             (">=", "GE"),
@@ -37,8 +39,9 @@ class TestRelationalOperators(unittest.TestCase):
                 self.assertEqual(tipo, token_esperado)
                 self.assertEqual(lexema, entrada)
 
+    # Tercer test
+    # Comprueba que separe adecuadamente el operador del resto de la cadena
     def test_operadores_con_texto_extra(self):
-        """Comprueba que se separe el operador de caracteres posteriores."""
         casos = [
             ("<=5", "<=", "LE"),
             ("==x", "==", "EQ"),
@@ -52,8 +55,9 @@ class TestRelationalOperators(unittest.TestCase):
                 self.assertEqual(tipo, token_esperado)
                 self.assertEqual(lexema, lexema_esperado)
 
+    # Cuarto test
+    # Comprueba que detenga o reporte error con entradas invalidas
     def test_entradas_invalidas(self):
-        """Comprueba el rechazo de entradas inválidas como caracteres aislados '!' o texto vacío."""
         casos = ["", "a", "!", "1", "_"]
         for entrada in casos:
             with self.subTest(entrada=entrada):

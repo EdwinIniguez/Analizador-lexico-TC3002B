@@ -8,8 +8,9 @@ import NAME as lexer  # type: ignore
 
 class TestName(unittest.TestCase):
 
+    # Primer test
+    # Prueba que los identificadores validos se reconozcan completamente
     def test_nombres_validos(self):
-        """Prueba que los identificadores válidos se reconozcan completamente."""
         casos = ["variable", "x", "_contador", "v123", "MiClase_12"]
         for entrada in casos:
             with self.subTest(entrada=entrada):
@@ -18,8 +19,9 @@ class TestName(unittest.TestCase):
                 self.assertEqual(tipo, "NAME")
                 self.assertEqual(lexema, entrada)
 
+    # Segundo test
+    # Prueba que se detenga el reconocimiento al encontrar un caracter no valido
     def test_nombres_con_caracteres_invalidos(self):
-        """Prueba que se detenga el reconocimiento al encontrar un caracter no válido."""
         casos = [
             ("var!iable", "var"),
             ("nombre@correo", "nombre"),

@@ -7,19 +7,21 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'S
 import INDENTATION as lexer  # type: ignore
 
 class TestIndentation(unittest.TestCase):
-
+    
+    # Garantiza que la pila este limpia
     def setUp(self):
-        """Este método se ejecuta antes de cada prueba. Garantiza que la pila esté limpia."""
         lexer.resetear_pila()
-
+    
+    # Primer test
+    # Prueba que una linea vacia devuelva un NEWLINE sin alterar la pila
     def test_linea_vacia_sin_indentacion(self):
-        """Prueba que una línea vacía devuelva un NEWLINE sin alterar la pila."""
         tokens = lexer.analizar_indentacion("")
         self.assertEqual(len(tokens), 1)
         self.assertEqual(tokens[0][1], "NEWLINE")
 
+    # Segundo Test
+    # Prueba que agregar espacios incremente la indentacion
     def test_aumento_indentacion(self):
-        """Prueba que agregar espacios incremente la indentación (INDENT)."""
         tokens = lexer.analizar_indentacion("    x = 1")
         # Debe generar INDENT, TEXTO, y NEWLINE
         self.assertEqual(len(tokens), 3)
@@ -30,19 +32,21 @@ class TestIndentation(unittest.TestCase):
         self.assertEqual(tokens[2][1], "NEWLINE")
         self.assertEqual(lexer.pila_indentacion, [0, 4])
 
+    # Tercer Test
+    # Prueba que volver a 0 espacios genere un DEDENT
     def test_disminucion_indentacion_simple(self):
-        """Prueba que volver a 0 espacios genere un DEDENT."""
-        # Pre-llenamos la pila
+        # Pre-llenar la pila
         lexer.analizar_indentacion("    x = 1")
         
-        # Reducimos a 0
+        # Reducir a 0
         tokens = lexer.analizar_indentacion("y = 2")
         self.assertEqual(len(tokens), 3)
         self.assertEqual(tokens[0][1], "DEDENT")
         self.assertEqual(lexer.pila_indentacion, [0])
 
+    # Cuarto test
+    # Prueba el retroceso de varios niveles de indentacion
     def test_disminucion_indentacion_multiple(self):
-        """Prueba el retroceso de varios niveles de indentación (Ej: de 8 espacios a 0)."""
         lexer.analizar_indentacion("    nivel 1")
         lexer.analizar_indentacion("        nivel 2")
         
@@ -52,8 +56,9 @@ class TestIndentation(unittest.TestCase):
         self.assertEqual(tipos_tokens, ["DEDENT", "DEDENT", "TEXTO", "NEWLINE"])
         self.assertEqual(lexer.pila_indentacion, [0])
 
+    # Quinto tst
+    # Prueba que niveles de reduccion no coincidentes generen un error
     def test_error_indentacion(self):
-        """Prueba que niveles de reducción no coincidentes generen un error."""
         lexer.analizar_indentacion("    nivel 1")
         tokens = lexer.analizar_indentacion("  nivel_intermedio")
         self.assertEqual(tokens[1][1], "ERROR")

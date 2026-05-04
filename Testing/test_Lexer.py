@@ -5,6 +5,7 @@ import tempfile
 from io import StringIO
 from unittest.mock import patch
 
+# Agregar ruta de la carpeta "Source" al path del sistema
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Source')))
 
 import Lexer as lexer_principal  # type: ignore
@@ -27,9 +28,8 @@ class TestLexer(unittest.TestCase):
         return ruta
 
     # Primer test
-    # 
+    # Prueba que el lexer analice correctamente un bloque de codigo valido y agrupe las estructuras
     def test_analisis_codigo_valido(self):
-        """Prueba que el lexer analice correctamente un bloque de código válido y agrupe las estructuras."""
         codigo = "def suma(a, b):\n    return a + b\n"
         ruta = self.crear_archivo_temp(codigo)
 
@@ -39,7 +39,7 @@ class TestLexer(unittest.TestCase):
         self.assertIsNotNone(tokens)
         tipos_tokens = [t[0] for t in tokens]
         
-        # Valida algunos tokens esperados en esa cadena de texto
+        # Valida tokens esperados en la cadena de texto
         self.assertIn("DEF", tipos_tokens)
         self.assertIn("NAME", tipos_tokens)
         self.assertIn("LPAREN", tipos_tokens)
@@ -49,33 +49,36 @@ class TestLexer(unittest.TestCase):
         self.assertIn("PLUS", tipos_tokens)
         self.assertIn("INDENT", tipos_tokens)
 
-        # Verifica que la tabla de símbolos haya registrado las variables y funciones
+        # Verifica que la tabla de simbolos haya registrado las variables y funciones
         self.assertIn("suma", tabla)
         self.assertIn("a", tabla)
         self.assertIn("b", tabla)
 
+    # Segundo test
+    # PRUEBA NEGATIVA: Verifica que un caracter no reconocido genere un ERROR en tokens y consola
     @patch('sys.stdout', new_callable=StringIO)
     def test_caracter_invalido_generacion_error(self, mock_stdout):
-        """PRUEBA NEGATIVA: Verifica que un caracter no reconocido genere un ERROR en tokens y consola."""
-        # El caracter '$' no es un símbolo o delimitador válido
+        
+        # El caracter '$' no es un simbolo o delimitador valido
         codigo = "variable = 10 $\n"
         ruta = self.crear_archivo_temp(codigo)
 
         tokens, tabla = lexer_principal.analizar_codigo_fuente(ruta)
 
-        # 1. Validamos que el error está presente en la secuencia generada
+        # 1. Valida que el error esta presente en la secuencia generada
         token_error = next(t for t in tokens if t[0] == "ERROR")
         self.assertEqual(token_error[1], "$")  # El lexema del error debe ser '$'
-        self.assertEqual(token_error[2], 1)    # Sucedió en la línea 1
+        self.assertEqual(token_error[2], 1)    # Sucedio en la línea 1
 
-        # 2. Validamos el mensaje de error impreso en la consola interceptada
+        # 2. Valida el mensaje de error impreso en la consola interceptada
         salida_consola = mock_stdout.getvalue()
         self.assertIn("Caracter léxico no reconocido", salida_consola)
         self.assertIn("$", salida_consola)
 
+    # Tercer Test
+    # PRUEBA NEGATIVA: Verifica como se maneja la advertencia cuando el archivo fuente no existe
     @patch('sys.stdout', new_callable=StringIO)
     def test_archivo_inexistente(self, mock_stdout):
-        """PRUEBA NEGATIVA: Verifica cómo se maneja la advertencia cuando el archivo fuente no existe."""
         ruta_falsa = os.path.join(self.test_dir.name, "archivo_fantasma.py")
         resultado = lexer_principal.analizar_codigo_fuente(ruta_falsa)
         

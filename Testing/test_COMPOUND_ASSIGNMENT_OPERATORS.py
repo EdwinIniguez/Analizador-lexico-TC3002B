@@ -2,15 +2,16 @@ import unittest
 import sys
 import os
 
-# Agregamos la ruta de la carpeta "Source" al path del sistema
+# Agregar ruta de la carpeta "Source" al path del sistema
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Source')))
 
 import COMPOUND_ASSIGNMENT_OPERATORS as lexer  # type: ignore
 
 class TestOperadoresAsignacion(unittest.TestCase):
-
+    
+    # Primer test
+    # prueba que los operadores exactos sean reconocidos correctamente
     def test_reconocimiento_operadores_exactos(self):
-        """Prueba que los operadores exactos sean reconocidos correctamente."""
         casos = [
             ("+=", "PLUSEQ"),
             ("-=", "MINUSEQ"),
@@ -24,8 +25,9 @@ class TestOperadoresAsignacion(unittest.TestCase):
                 self.assertEqual(tipo, token_esperado)
                 self.assertEqual(lexema, entrada)
 
+    # Segundo test
+    # Prueba que los operadores se separen del texto extra (ej: +=5)
     def test_operadores_con_texto_extra(self):
-        """Prueba que los operadores se separen del texto extra (ej: +=5)."""
         casos = [
             ("+=5", "+=", "PLUSEQ"),
             ("-=x", "-=", "MINUSEQ"),
@@ -38,9 +40,10 @@ class TestOperadoresAsignacion(unittest.TestCase):
                 self.assertTrue(es_op)
                 self.assertEqual(tipo, token_esperado)
                 self.assertEqual(lexema, lexema_esperado)
-                
+
+    # Tercer test
+    # Prueba entradas que no son operadores de asignacion compuesta    
     def test_entradas_invalidas_incompletas(self):
-        """Prueba entradas que no son operadores de asignación compuesta."""
         casos = ["+", "-", "*", "/", "++", "--", "==5", ""]
         for entrada in casos:
             with self.subTest(entrada=entrada):

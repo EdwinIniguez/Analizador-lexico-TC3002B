@@ -7,9 +7,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'S
 import IF_ELSE_ELIF as lexer  # type: ignore
 
 class TestIfElseElif(unittest.TestCase):
-
+    # Primer Test
+    # Comprueba que los keywords 'if', 'elif' y 'else' sean reconocidos perfectamente
     def test_reconocimiento_exacto(self):
-        """Comprueba que los keywords 'if', 'elif' y 'else' sean reconocidos perfectamente."""
         casos = [
             ("if", "IF"),
             ("elif", "ELIF"),
@@ -22,8 +22,9 @@ class TestIfElseElif(unittest.TestCase):
                 self.assertEqual(tipo, token_esperado)
                 self.assertEqual(lexema, entrada)
 
+    # Segundo Test
+    # Comprueba que identificadores que inician con 'if', 'el' o 'else' sean marcados como NAME
     def test_prefijos_identificadores(self):
-        """Comprueba que identificadores que inician con 'if', 'el' o 'else' sean marcados como NAME."""
         casos = ["iffy", "elephant", "elsewhere", "if1", "elif_var"]
         for entrada in casos:
             with self.subTest(entrada=entrada):
@@ -31,9 +32,10 @@ class TestIfElseElif(unittest.TestCase):
                 self.assertFalse(es_kw)
                 self.assertEqual(tipo, "NAME")
                 self.assertEqual(lexema, entrada)
-
+    
+    # tercer test
+    # Comprueba que arroje un error al pasar palabras que no empiezan como condicionales
     def test_entradas_invalidas(self):
-        """Comprueba que arroje un error si le pasamos palabras que no empiezan como condicionales."""
         casos = ["", "a", "x", "xyz"]
         for entrada in casos:
             with self.subTest(entrada=entrada):

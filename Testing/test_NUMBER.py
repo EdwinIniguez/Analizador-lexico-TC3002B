@@ -8,8 +8,9 @@ import NUMBER as lexer  # type: ignore
 
 class TestNumber(unittest.TestCase):
 
+    # Primer test
+    # Prueba que los numeros sin punto se reconozcan como ENTEROS
     def test_numeros_enteros(self):
-        """Prueba que los números sin punto se reconozcan como ENTEROS."""
         casos = ["0", "1", "42", "9999"]
         for entrada in casos:
             with self.subTest(entrada=entrada):
@@ -19,8 +20,9 @@ class TestNumber(unittest.TestCase):
                 self.assertEqual(subtipo, "ENTERO")
                 self.assertEqual(lexema, entrada)
 
+    # Segundo test
+    # Prueba que los numeros con punto se reconozcan como DECIMALES
     def test_numeros_decimales(self):
-        """Prueba que los números con un punto se reconozcan como DECIMAL."""
         casos = ["0.0", "3.14", "99.99"]
         for entrada in casos:
             with self.subTest(entrada=entrada):
@@ -30,8 +32,9 @@ class TestNumber(unittest.TestCase):
                 self.assertEqual(subtipo, "DECIMAL")
                 self.assertEqual(lexema, entrada)
 
+    # Tecer Test
+    # Prueba que detenga la captura del numero si se topa con un caracter no numerico
     def test_numeros_con_texto_extra(self):
-        """Prueba que detenga la captura del número si se topa con un caracter no numérico."""
         casos = [
             ("42x", "42", "ENTERO"),
             ("3.14+", "3.14", "DECIMAL"),
@@ -45,8 +48,9 @@ class TestNumber(unittest.TestCase):
                 self.assertEqual(subtipo, subtipo_esperado)
                 self.assertEqual(lexema, lexema_esperado)
 
+    # Cuarto test
+    # Prueba que tire error al iniciar con caracteres no numericos o dejar un punto colgando
     def test_errores_en_numeros(self):
-        """Prueba que tire error al iniciar con caracteres no numéricos o dejar un punto colgando."""
         casos = ["", "a", ".", "3."]
         for entrada in casos:
             with self.subTest(entrada=entrada):
