@@ -8,8 +8,9 @@ import SPECIAL_SYMBOLS as lexer  # type: ignore
 
 class TestSpecialSymbols(unittest.TestCase):
 
+    # Primer test 
+    # Prueba que los simbolos especiales de un solo caracter sean reconocidos
     def test_simbolos_simples(self):
-        """Prueba que los símbolos especiales de un solo caracter sean reconocidos."""
         casos = [
             (",", "COMMA"),
             (":", "COLON"),
@@ -27,8 +28,9 @@ class TestSpecialSymbols(unittest.TestCase):
                 self.assertEqual(tipo, token_esperado)
                 self.assertEqual(lexema, entrada)
 
+    # Segundo test
+    # Prueba que los simbolos especiales de dos caracteres sean reconocidos
     def test_simbolos_compuestos(self):
-        """Prueba que los símbolos especiales de dos caracteres sean reconocidos."""
         casos = [
             ("->", "ARROW"),
             ("<<", "LSHIFT"),
@@ -41,8 +43,9 @@ class TestSpecialSymbols(unittest.TestCase):
                 self.assertEqual(tipo, token_esperado)
                 self.assertEqual(lexema, entrada)
 
+    # Tercer test
+    # Prueba que se separe el simbolo de otros caracteres
     def test_simbolos_con_texto_extra(self):
-        """Prueba que se separe el símbolo de otros caracteres."""
         casos = [
             ("->x", "->", "ARROW"),
             ("<<5", "<<", "LSHIFT"),
@@ -56,8 +59,9 @@ class TestSpecialSymbols(unittest.TestCase):
                 self.assertEqual(tipo, token_esperado)
                 self.assertEqual(lexema, lexema_esperado)
 
+    # Cuarto test
+    # Prueba que detenga o reporte error con entradas invalidas
     def test_entradas_invalidas(self):
-        """Prueba entradas que no corresponden a un símbolo válido o están incompletas."""
         casos = ["", "a", "-", "<", ">", "1"]
         for entrada in casos:
             with self.subTest(entrada=entrada):

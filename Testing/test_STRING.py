@@ -8,8 +8,9 @@ import STRING as lexer  # type: ignore
 
 class TestString(unittest.TestCase):
 
+    # Primer Test
+    # Comprueba el reconocimiento de cadenas bien formadas
     def test_cadenas_validas(self):
-        """Comprueba el reconocimiento de cadenas bien formadas."""
         casos = [
             ('""', '""'),
             ('"hola"', '"hola"'),
@@ -22,8 +23,9 @@ class TestString(unittest.TestCase):
                 self.assertEqual(tipo, "STRING")
                 self.assertEqual(lexema, lexema_esperado)
                 
+    # Segundo Test
+    # Comprueba que separa la cadena si hay algo despues de la comilla final
     def test_cadena_con_texto_extra(self):
-        """Comprueba que separa la cadena si hay algo después de la comilla final."""
         casos = [
             ('"hola" extra', '"hola"'),
             ('""+', '""')
@@ -35,8 +37,9 @@ class TestString(unittest.TestCase):
                 self.assertEqual(tipo, "STRING")
                 self.assertEqual(lexema, lexema_esperado)
 
+    # Cuarto test
+    # Comprueba el rechazo de cadenas no terminadas, con saltos de linea o sin comilla de inicio
     def test_cadenas_invalidas(self):
-        """Comprueba el rechazo de cadenas no terminadas, con saltos de línea o sin comilla de inicio."""
         casos = ["", "hola", '"', '"hola', '"hola\n"']
         for entrada in casos:
             with self.subTest(entrada=entrada):

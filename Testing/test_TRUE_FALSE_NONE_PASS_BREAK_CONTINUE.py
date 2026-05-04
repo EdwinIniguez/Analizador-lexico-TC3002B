@@ -7,9 +7,10 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'S
 import TRUE_FALSE_NONE_PASS_BREAK_CONTINUE as lexer  # type: ignore
 
 class TestTrueFalseNonePassBreakContinue(unittest.TestCase):
-
+    
+    # Primer Test
+    # Prueba que los keywords exactos sean reconocidos como tokens validos
     def test_reconocimiento_keywords(self):
-        """Prueba que los keywords exactos sean reconocidos con el token correcto."""
         casos = [
             ("VERDADERO", "VERDADERO"),
             ("FALSO", "FALSO"),
@@ -25,8 +26,9 @@ class TestTrueFalseNonePassBreakContinue(unittest.TestCase):
                 self.assertEqual(tipo, token_esperado)
                 self.assertEqual(lexema, entrada)
 
+    # Segundo Test
+    # Prueba que palabras que comienzan con keywords, pero continuan, sean NAME
     def test_prefijos_de_keywords_son_names(self):
-        """Prueba que si una palabra comienza con el keyword pero continúa, sea un NAME."""
         casos = ["VERDADEROS", "FALSO1", "None_", "password", "breakdown", "continues"]
         for entrada in casos:
             with self.subTest(entrada=entrada):
@@ -35,8 +37,9 @@ class TestTrueFalseNonePassBreakContinue(unittest.TestCase):
                 self.assertEqual(tipo, "NAME")
                 self.assertEqual(lexema, entrada)
 
+    # Tercer test
+    # Prueba identificadores validos o caracteres que no deben ser clasificados como DEF/RETURN
     def test_identificadores_regulares_y_errores(self):
-        """Prueba identificadores válidos o entradas erróneas."""
         casos = ["variable", "x", "_contador", "", "!"]
         for entrada in casos:
             with self.subTest(entrada=entrada):
