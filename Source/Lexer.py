@@ -1,6 +1,5 @@
 import os
 
-# Importación de todos los submódulos del analizador
 import COMPOUND_ASSIGNMENT_OPERATORS
 import RELATIONAL_OPERATORS
 import SPECIAL_SYMBOLS
@@ -27,7 +26,7 @@ def analizar_codigo_fuente(ruta_archivo):
 
     INDENTATION.resetear_pila()
     secuencia_tokens = []
-    tabla_simbolos = set()  # Set para guardar identificadores únicos
+    tabla_simbolos = set()  # set para guardar los identificadores unicos
 
     print("\n" + "="*65)
     print(f"{'TOKEN':<20} | {'LEXEMA':<25} | {'LÍNEA'}")
@@ -35,7 +34,7 @@ def analizar_codigo_fuente(ruta_archivo):
 
     for num_linea, linea in enumerate(lineas, start=1):
         
-        # 1. Pasar la línea completa al autómata de indentación
+        #Pasar la linea completa al automata de indentacion
         tokens_indentacion = INDENTATION.analizar_indentacion(linea)
         
         for token_tuple in tokens_indentacion:
@@ -44,11 +43,11 @@ def analizar_codigo_fuente(ruta_archivo):
             # Manejar los tokens estructurales (INDENT, DEDENT, NEWLINE)
             if tipo_token in ["INDENT", "DEDENT", "NEWLINE"]:
                 secuencia_tokens.append((tipo_token, lexema, num_linea))
-                # Limpiamos el salto de línea para que se imprima explícitamente en consola
+                # Limpia el salto de linea para imprimir en consola
                 lex_print = lexema.replace('\n', '\\n') if lexema else ''
                 print(f"{tipo_token:<20} | {lex_print:<25} | {num_linea}")
             
-            # Manejar el contenido real de la línea
+            # Manejar el contenido real de la linea
             elif tipo_token == "TEXTO":
                 subcadena = lexema
                 indice = 0
@@ -63,25 +62,23 @@ def analizar_codigo_fuente(ruta_archivo):
                     cadena_actual = subcadena[indice:]
                     match_encontrado = None
                     
-                    # -- ORDEN DE PRIORIDAD DE EVALUACIÓN --
-                    
-                    # 1. STRINGS (Cadenas de texto)
+                    #STRINGS
                     valido, tipo, lex, msg = STRING.reconocer_cadena(cadena_actual)
                     if valido: 
                         match_encontrado = (tipo, lex)
                     
-                    # 2. NÚMEROS
+                    #NUMEROS
                     if not match_encontrado:
                         valido, tipo, subtipo, lex, msg = NUMBER.reconocer_numero(cadena_actual)
                         if valido: 
                             match_encontrado = (tipo, lex)
                     
-                    # 3. IDENTIFICADORES Y KEYWORDS
+                    #KEYWORDS
                     if not match_encontrado:
                         valido, tipo, lex, msg = NAME.reconocer_identificador(cadena_actual)
                         if valido:
                             es_keyword = False
-                            # Probar contra todos los autómatas de palabras reservadas
+                            # Probar contra todos los automatas de keywords
                             para_probar = [
                                 IF_ELSE_ELIF.reconocer_condicional,
                                 DEF_RETURN.reconocer_keyword_regex,
@@ -91,43 +88,42 @@ def analizar_codigo_fuente(ruta_archivo):
                             ]
                             for funcion_kw in para_probar:
                                 res_kw = funcion_kw(lex)
-                                if res_kw[0]: # Si es una keyword válida
+                                if res_kw[0]: # es una keyword valida
                                     match_encontrado = (res_kw[1], res_kw[2])
                                     es_keyword = True
                                     break
                             
-                            # Si no fue keyword, entonces garantizamos que es un NAME
+                            # Si no fue keyword entonces asumimos que es un NAME
                             if not es_keyword:
                                 match_encontrado = ("NAME", lex)
-                                tabla_simbolos.add(lex) # Añadir a la tabla de símbolos
+                                tabla_simbolos.add(lex) # Añadir a la tabla de simbolos
                     
-                    # 4. OPERADORES DE ASIGNACIÓN COMPUESTA (+=, -=, etc.)
+                    # OPERADORES DE ASIGNACION COMPUESTA (+=, -=, etc.)
                     if not match_encontrado:
                         res = COMPOUND_ASSIGNMENT_OPERATORS.reconocer_operadores_asignacion_compuesta(cadena_actual)
                         if res[0]: match_encontrado = (res[1], res[2])
                         
-                    # 5. SÍMBOLOS ESPECIALES Y DELIMITADORES COMPUESTOS (->, <<, >>, etc.)
-                    # (Deben ir antes de relacionales y aritméticos para que '->' no se lea como '-')
+                    # SIMBOLOS ESPECIALES Y DELIMITADORES COMPUESTOS (->, <<, >>, etc.)
                     if not match_encontrado:
                         res = SPECIAL_SYMBOLS.reconocer_simbolo_especial(cadena_actual)
                         if res[0]: match_encontrado = (res[1], res[2])
                         
-                    # 6. OPERADORES RELACIONALES Y ASIGNACIÓN NORMAL (<=, ==, <, =)
+                    # OPERADORES RELACIONALES Y ASIGNACION NORMAL (<=, ==, <, =)
                     if not match_encontrado:
                         res = RELATIONAL_OPERATORS.reconocer_operadores_relacionales_regex(cadena_actual)
                         if res[0]: match_encontrado = (res[1], res[2])
                         
-                    # 7. DELIMITADORES SIMPLES ( (, [, { )
+                    # DELIMITADORES SIMPLES ( (, [, { )
                     if not match_encontrado:
                         res = DELIMITERS.reconocer_delimitador(cadena_actual)
                         if res[0]: match_encontrado = (res[1], res[2])
                         
-                    # 8. OPERADORES ARITMÉTICOS (+, -, *, /, //, %)
+                    # OPERADORES ARITMETICOS (+, -, *, /, //, %)
                     if not match_encontrado:
                         res = OPERATORS.reconocer_operador_aritmetico(cadena_actual)
                         if res[0]: match_encontrado = (res[1], res[2])
                         
-                    # -- RESULTADO DE LA EVALUACIÓN --
+                    # RESULTADO DE LA EVALUACIÓN
                     if match_encontrado:
                         tipo_final, lexema_final = match_encontrado
                         secuencia_tokens.append((tipo_final, lexema_final, num_linea))
@@ -141,7 +137,7 @@ def analizar_codigo_fuente(ruta_archivo):
 
     print("="*65)
     
-    # Generar la Tabla de Símbolos
+    # tabla de simbolos
     print("\n" + "="*45)
     print("    TABLA DE SÍMBOLOS (Identificadores)")
     print("="*45)
@@ -153,7 +149,7 @@ def analizar_codigo_fuente(ruta_archivo):
 
 
 if __name__ == '__main__':
-    # Archivo de código fuente por defecto (se crea de ejemplo si no existe)
+    # Archivo de código fuente por defecto
     archivo_prueba = "test_triton.py"
     
     if not os.path.exists(archivo_prueba):
