@@ -2,8 +2,8 @@
 # Tipo de implementación: REGEX
 #
 #
-#   RE para VERDADERO  →  V E R D A D E R O  
-#   RE para FALSO      →  F A L S O
+#   RE para VERDADERO  →  T r u e
+#   RE para FALSO      →  F a l s e
 #   RE para NONE       →  N o n e  Con N mayúscula
 #   RE para PASS       →  p a s s
 #   RE para BREAK      →  b r e a k
@@ -136,13 +136,13 @@ def comparar_keyword(cadena_de_entrada, keyword_esperado, nombre_token):
 def reconocer_verdadero(cadena_de_entrada):  # RE para V E R D A D E R O
     if len(cadena_de_entrada) == 0:
         return (False, "ERROR", "", "Error: la cadena de entrada está vacía.")
-    return comparar_keyword(cadena_de_entrada, "VERDADERO", "VERDADERO")
+    return comparar_keyword(cadena_de_entrada, "True", "VERDADERO")
 
 
 def reconocer_falso(cadena_de_entrada):      # RE para F A L S O
     if len(cadena_de_entrada) == 0:
         return (False, "ERROR", "", "Error: la cadena de entrada está vacía.")
-    return comparar_keyword(cadena_de_entrada, "FALSO", "FALSO")
+    return comparar_keyword(cadena_de_entrada, "False", "FALSO")
 
 
 def reconocer_none(cadena_de_entrada):       # RE para N o n e  (N mayúscula)
@@ -174,7 +174,7 @@ def reconocer_continue(cadena_de_entrada):   # RE para c o n t i n u e
 # Diccionario para guardar cada letra inicial al keyword que le toca
 # Agrupamos los keywords por su letra inicial para saber cuál función llamar
 KEYWORDS_POR_INICIO = {
-    'V': reconocer_verdadero,
+    'T': reconocer_verdadero,
     'F': reconocer_falso,
     'N': reconocer_none,
     'p': reconocer_pass,

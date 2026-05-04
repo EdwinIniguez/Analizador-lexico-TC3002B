@@ -1,5 +1,4 @@
 import os
-import sys
 
 # Importación de todos los submódulos del analizador
 import COMPOUND_ASSIGNMENT_OPERATORS
@@ -28,7 +27,7 @@ def analizar_codigo_fuente(ruta_archivo):
 
     INDENTATION.resetear_pila()
     secuencia_tokens = []
-    tabla_simbolos = set()  # Usamos un set para guardar identificadores únicos
+    tabla_simbolos = set()  # Set para guardar identificadores únicos
 
     print("\n" + "="*65)
     print(f"{'TOKEN':<20} | {'LEXEMA':<25} | {'LÍNEA'}")
@@ -142,13 +141,15 @@ def analizar_codigo_fuente(ruta_archivo):
 
     print("="*65)
     
-    # Generar la Tabla de Símbolos Requerida
+    # Generar la Tabla de Símbolos
     print("\n" + "="*45)
     print("    TABLA DE SÍMBOLOS (Identificadores)")
     print("="*45)
     for i, simbolo in enumerate(sorted(tabla_simbolos), start=1):
         print(f" ID: {i:03d} | NAME: {simbolo}")
     print("="*45 + "\n")
+    
+    return secuencia_tokens, tabla_simbolos
 
 
 if __name__ == '__main__':
@@ -157,13 +158,27 @@ if __name__ == '__main__':
     
     if not os.path.exists(archivo_prueba):
         with open(archivo_prueba, "w", encoding="utf-8") as file:
-            file.write("def mi_kernel_triton(x, y):\n")
-            file.write("    while x < 10:\n")
-            file.write("        if x == 5:\n")
-            file.write("            pass\n")
-            file.write("        x += 1\n")
-            file.write('        nombre = "hola"\n')
-            file.write("    return VERDADERO\n")
+            file.write("@mi_decorador\n")
+            file.write("def prueba_triton(x, y) -> True:\n")
+            file.write("    if x == 10:\n")
+            file.write("        pass\n")
+            file.write("    elif x != 20:\n")
+            file.write("        continue\n")
+            file.write("    else:\n")
+            file.write("        break\n")
+            file.write("    while x < 5:\n")
+            file.write("        return False\n")
+            file.write("    for i in [1, 2, 3]:\n")
+            file.write("        a = 1 + 2 - 3 * 4 / 5 // 6 % 7 ** 8\n")
+            file.write("        a += 1\n")
+            file.write("        a -= 2\n")
+            file.write("        a *= 3\n")
+            file.write("        a /= 4\n")
+            file.write("        b = (a <= 10) and (a >= 5) or not (a > 15) is True\n")
+            file.write('        diccionario = {"llave": "valor_string"}\n')
+            file.write("        objeto.metodo(x, y)\n")
+            file.write("        c = ~a & b ` c ^ d << 1 >> 2\n")
+            file.write("    return None\n")
     
     print(f"Iniciando analizador léxico con el archivo de prueba: {archivo_prueba}")
     analizar_codigo_fuente(archivo_prueba)
