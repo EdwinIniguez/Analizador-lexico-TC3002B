@@ -184,20 +184,21 @@ def reconocer_keyword_regex(cadena_de_entrada):
 
 
 # Pruebas de las regex
-print("  Tokens regex: DEF  RETURN")
-print("  Escribe 'salir' para terminar.")
+if __name__ == "__main__":
+    print("  Tokens regex: DEF  RETURN")
+    print("  Escribe 'salir' para terminar.")
 
-while True:
+    while True:
 
-    cadena_ingresada = input("\n  Ingresa una cadena: ")  # input de cadena a analizar
+        cadena_ingresada = input("\n  Ingresa una cadena: ")  # input de cadena a analizar
 
-    if cadena_ingresada == "salir":  # Condición de salida del programa
-        print("  Programa terminado.")
-        break
+        if cadena_ingresada == "salir":  # Condición de salida del programa
+            print("  Programa terminado.")
+            break
 
-    es_keyword, tipo_token, lexema, mensaje = reconocer_keyword_regex(cadena_ingresada)
+        es_keyword, tipo_token, lexema, mensaje = reconocer_keyword_regex(cadena_ingresada)
 
-    print(f"  Token    : {tipo_token}")
-    print(f"  Lexema   : '{lexema}'")
-    print(f"  Mensaje  : {mensaje}")
-    print("-" * 60)
+        print(f"  Token    : {tipo_token}")
+        print(f"  Lexema   : '{lexema}'")
+        print(f"  Mensaje  : {mensaje}")
+        print("-" * 60)

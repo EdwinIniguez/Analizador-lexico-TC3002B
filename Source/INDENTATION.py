@@ -92,23 +92,24 @@ def resetear_pila():
 
 
 # Pruebas del autómata con pila
-print("  Tokens de control de indentación: NEWLINE, INDENT, DEDENT")
-print("  Nota: Agrega espacios al inicio de tu texto para simular la indentación.")
-print("  Escribe 'salir' para terminar o 'reset' para vaciar la pila de indentación.")
+if __name__ == "__main__":
+    print("  Tokens de control de indentación: NEWLINE, INDENT, DEDENT")
+    print("  Nota: Agrega espacios al inicio de tu texto para simular la indentación.")
+    print("  Escribe 'salir' para terminar o 'reset' para vaciar la pila de indentación.")
 
-while True:
+    while True:
 
-    cadena_ingresada = input("\n  Ingresa una línea: ")
+        cadena_ingresada = input("\n  Ingresa una línea: ")
 
-    if cadena_ingresada == "salir":
-        print("  Programa terminado.")
-        break
-    elif cadena_ingresada == "reset":
-        resetear_pila()
-        print("  Pila de indentación reseteada a [0].")
-        continue
+        if cadena_ingresada == "salir":
+            print("  Programa terminado.")
+            break
+        elif cadena_ingresada == "reset":
+            resetear_pila()
+            print("  Pila de indentación reseteada a [0].")
+            continue
 
-    lista_tokens = analizar_indentacion(cadena_ingresada)
+        lista_tokens = analizar_indentacion(cadena_ingresada)
 
-    for es_valido, tipo_token, lexema, mensaje in lista_tokens:
-        print(f"  Token    : {tipo_token:<8} | Lexema: '{lexema}' | {mensaje}")
+        for es_valido, tipo_token, lexema, mensaje in lista_tokens:
+            print(f"  Token    : {tipo_token:<8} | Lexema: '{lexema}' | {mensaje}")

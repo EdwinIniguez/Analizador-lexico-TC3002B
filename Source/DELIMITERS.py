@@ -138,20 +138,21 @@ def reconocer_delimitador(cadena_de_entrada):
 
 
 # Pruebas de las regex
-print("  Tokens de delimitadores: LPAREN (()  RPAREN ())  LBRACKET ([)  RBRACKET (])  LBRACE ({)  RBRACE (})")
-print("  Escribe 'salir' para terminar.")
+if __name__ == "__main__":
+    print("  Tokens de delimitadores: LPAREN (()  RPAREN ())  LBRACKET ([)  RBRACKET (])  LBRACE ({)  RBRACE (})")
+    print("  Escribe 'salir' para terminar.")
 
-while True:
+    while True:
 
-    cadena_ingresada = input("\n  Ingresa una cadena: ")
+        cadena_ingresada = input("\n  Ingresa una cadena: ")
 
-    if cadena_ingresada == "salir":
-        print("  Programa terminado.")
-        break
+        if cadena_ingresada == "salir":
+            print("  Programa terminado.")
+            break
 
-    es_delimitador, tipo_token, lexema, mensaje = reconocer_delimitador(cadena_ingresada)
+        es_delimitador, tipo_token, lexema, mensaje = reconocer_delimitador(cadena_ingresada)
 
-    print(f"  Token    : {tipo_token}")
-    print(f"  Lexema   : '{lexema}'")
-    print(f"  Mensaje  : {mensaje}")
-    print("-" * 60)
+        print(f"  Token    : {tipo_token}")
+        print(f"  Lexema   : '{lexema}'")
+        print(f"  Mensaje  : {mensaje}")
+        print("-" * 60)

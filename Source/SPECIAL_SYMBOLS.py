@@ -189,22 +189,23 @@ def reconocer_simbolo_especial(cadena_de_entrada):
 
 
 # Pruebas de las regex
-print("  Tokens de símbolos especiales:")
-print("  COMMA (,)  COLON (:)  DOT (.)  AT (@)  ARROW (->)  TILDE (~)")
-print("  AMPERSAND (&)  PIPE (`)  CARET (^)  LSHIFT (<<)  RSHIFT (>>)")
-print("  Escribe 'salir' para terminar.")
+if __name__ == "__main__":
+    print("  Tokens de símbolos especiales:")
+    print("  COMMA (,)  COLON (:)  DOT (.)  AT (@)  ARROW (->)  TILDE (~)")
+    print("  AMPERSAND (&)  PIPE (`)  CARET (^)  LSHIFT (<<)  RSHIFT (>>)")
+    print("  Escribe 'salir' para terminar.")
 
-while True:
+    while True:
 
-    cadena_ingresada = input("\n  Ingresa una cadena: ")
+        cadena_ingresada = input("\n  Ingresa una cadena: ")
 
-    if cadena_ingresada == "salir":
-        print("  Programa terminado.")
-        break
+        if cadena_ingresada == "salir":
+            print("  Programa terminado.")
+            break
 
-    es_simbolo, tipo_token, lexema, mensaje = reconocer_simbolo_especial(cadena_ingresada)
+        es_simbolo, tipo_token, lexema, mensaje = reconocer_simbolo_especial(cadena_ingresada)
 
-    print(f"  Token    : {tipo_token}")
-    print(f"  Lexema   : '{lexema}'")
-    print(f"  Mensaje  : {mensaje}")
-    print("-" * 60)
+        print(f"  Token    : {tipo_token}")
+        print(f"  Lexema   : '{lexema}'")
+        print(f"  Mensaje  : {mensaje}")
+        print("-" * 60)
